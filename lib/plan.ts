@@ -506,72 +506,69 @@ function buildDayItems(
     return { title: `${baseName} in ${cityName}` };
   }
 
-  // Helper: personalize a meal name based on profile
+  // Helper: personalize a meal name based on profile, style, and region
   function personalizedMealName(
     mealType: "breakfast" | "lunch" | "dinner",
   ): string {
-    if (!profile) {
-      const defaults: Record<string, string> = {
-        breakfast: "Breakfast",
-        lunch: "Lunch",
-        dinner: "Dinner",
-      };
-      return defaults[mealType];
-    }
-    const topInterest = profile.interests[0];
-    const isVeg = profile.dietary?.includes("vegetarian") || profile.dietary?.includes("vegan");
-    const isHalal = profile.dietary?.includes("halal");
-    const isKosher = profile.dietary?.includes("kosher");
-    const strictBudget = profile.budgetSensitivity === "strict";
+    // Region-specific hint takes priority for flavor
+    const regionHint = regionMealHint(destination, mealType);
+    // Style-based description as baseline
+    const styleDesc = styleMealDescription(style, mealType);
 
-    // Dietary takes priority for naming
-    if (isVeg) {
-      const vegPrefix = profile.dietary?.includes("vegan") ? "Vegan" : "Vegetarian";
-      if (mealType === "breakfast") return `${vegPrefix} breakfast`;
-      if (mealType === "lunch") return `${vegPrefix} restaurant lunch`;
-      return `${vegPrefix} restaurant dinner`;
-    }
-    if (isHalal) {
-      if (mealType === "breakfast") return "Halal breakfast";
-      if (mealType === "lunch") return "Halal restaurant lunch";
-      return "Halal restaurant dinner";
-    }
-    if (isKosher) {
-      if (mealType === "breakfast") return "Kosher breakfast";
-      if (mealType === "lunch") return "Kosher restaurant lunch";
-      return "Kosher restaurant dinner";
+    if (profile) {
+      const topInterest = profile.interests[0];
+      const isVeg = profile.dietary?.includes("vegetarian") || profile.dietary?.includes("vegan");
+      const isHalal = profile.dietary?.includes("halal");
+      const isKosher = profile.dietary?.includes("kosher");
+      const strictBudget = profile.budgetSensitivity === "strict";
+
+      // Dietary takes priority for naming
+      if (isVeg) {
+        const vegPrefix = profile.dietary?.includes("vegan") ? "Vegan" : "Vegetarian";
+        if (mealType === "breakfast") return `${vegPrefix} breakfast`;
+        if (mealType === "lunch") return `${vegPrefix} restaurant lunch`;
+        return `${vegPrefix} restaurant dinner`;
+      }
+      if (isHalal) {
+        if (mealType === "breakfast") return "Halal breakfast";
+        if (mealType === "lunch") return "Halal restaurant lunch";
+        return "Halal restaurant dinner";
+      }
+      if (isKosher) {
+        if (mealType === "breakfast") return "Kosher breakfast";
+        if (mealType === "lunch") return "Kosher restaurant lunch";
+        return "Kosher restaurant dinner";
+      }
+
+      // Budget strict — use style description
+      if (strictBudget) {
+        if (mealType === "breakfast") return "Affordable breakfast";
+        if (mealType === "lunch") return "Affordable local lunch";
+        return "Affordable local dinner";
+      }
+
+      // Interest-based naming with region flavor
+      if (topInterest === "foodie") {
+        if (regionHint) return regionHint;
+        if (mealType === "breakfast") return "Local specialty breakfast";
+        if (mealType === "lunch") return "Chef's tasting lunch";
+        return "Local street food dinner";
+      }
+      if (topInterest === "relaxation") {
+        if (mealType === "breakfast") return "Leisurely brunch";
+        if (mealType === "lunch") return "Slow lunch";
+        return "Sunset dinner";
+      }
+      if (profile.withKids) {
+        if (mealType === "breakfast") return "Family breakfast";
+        if (mealType === "lunch") return "Family-friendly lunch spot";
+        return "Family-friendly dinner";
+      }
     }
 
-    // Budget strict
-    if (strictBudget) {
-      if (mealType === "breakfast") return "Affordable breakfast";
-      if (mealType === "lunch") return "Affordable local lunch";
-      return "Affordable local dinner";
-    }
-
-    // Interest-based naming
-    if (topInterest === "foodie") {
-      if (mealType === "breakfast") return "Local specialty breakfast";
-      if (mealType === "lunch") return "Chef's tasting lunch";
-      return "Local street food dinner";
-    }
-    if (topInterest === "relaxation") {
-      if (mealType === "breakfast") return "Leisurely brunch";
-      if (mealType === "lunch") return "Slow lunch";
-      return "Sunset dinner";
-    }
-    if (profile.withKids) {
-      if (mealType === "breakfast") return "Family breakfast";
-      if (mealType === "lunch") return "Family-friendly lunch spot";
-      return "Family-friendly dinner";
-    }
-
-    const defaults: Record<string, string> = {
-      breakfast: "Breakfast",
-      lunch: "Lunch",
-      dinner: "Dinner",
-    };
-    return defaults[mealType];
+    // No profile: use region hint if available, otherwise style description
+    if (regionHint) return regionHint;
+    return styleDesc;
   }
 
   // ─── Airport transfer on arrival ──────────────────────────────────────
@@ -755,15 +752,10 @@ function buildDayItems(
       });
     }
     const dinnerInfo = mealInfo(personalizedMealName("dinner"), mealIdx++);
-    const styleDesc =
-      style === "budget"
-        ? "Street food or casual spot"
-        : style === "luxury"
-          ? "Fine dining"
-          : "Nice local restaurant";
+    const dinnerStyleDesc = styleMealDescription(style, "dinner");
     const dinnerDesc = dinnerInfo.description
-      ? `${dinnerInfo.description} · ${styleDesc.toLowerCase()} · ~$${dinnerCost}/person (included in food budget)`
-      : `${styleDesc} · ~$${dinnerCost}/person (included in food budget)`;
+      ? `${dinnerInfo.description} · ${dinnerStyleDesc.toLowerCase()} · ~$${dinnerCost}/person (included in food budget)`
+      : `${dinnerStyleDesc} · ~$${dinnerCost}/person (included in food budget)`;
     items.push({
       time: "evening",
       type: "meal",
@@ -798,6 +790,94 @@ function buildDayItems(
   }
 
   return items;
+}
+
+// ─── Region-aware meal hints ────────────────────────────────────────────
+
+function regionMealHint(
+  destination: Destination,
+  mealType: "breakfast" | "lunch" | "dinner",
+): string {
+  const cityLower = destination.name.toLowerCase();
+  if (cityLower.includes("tokyo") || cityLower.includes("japan")) {
+    if (mealType === "breakfast") return "Convenience store onigiri or kissaten coffee";
+    if (mealType === "lunch") return "Ramen, soba, or bento near today's area";
+    if (mealType === "dinner") return "Izakaya dinner with drinks";
+  }
+  if (cityLower.includes("paris") || cityLower.includes("france")) {
+    if (mealType === "breakfast") return "Croissant + cafe creme at a boulangerie";
+    if (mealType === "lunch") return "Bistro prix-fixe near today's activities";
+    if (mealType === "dinner") return "Brasserie dinner with wine";
+  }
+  if (cityLower.includes("rome") || cityLower.includes("italy")) {
+    if (mealType === "breakfast") return "Cornetto + espresso at a bar";
+    if (mealType === "lunch") return "Pizza al taglio or trattoria pasta";
+    if (mealType === "dinner") return "Trattoria dinner — pasta + secondo + house wine";
+  }
+  if (cityLower.includes("barcelona") || cityLower.includes("spain")) {
+    if (mealType === "breakfast") return "Pan con tomate + cafe con leche";
+    if (mealType === "lunch") return "Tapas or menu del dia";
+    if (mealType === "dinner") return "Pintxos crawl or sit-down tapas dinner";
+  }
+  if (cityLower.includes("bangkok") || cityLower.includes("thailand")) {
+    if (mealType === "breakfast") return "Street stall khao tom or hotel buffet";
+    if (mealType === "lunch") return "Pad thai or som tum from a street vendor";
+    if (mealType === "dinner") return "Night market feast or rooftop restaurant";
+  }
+  if (cityLower.includes("london") || cityLower.includes("uk")) {
+    if (mealType === "breakfast") return "Full English or cafe flat white + pastry";
+    if (mealType === "lunch") return "Pub lunch or market stall";
+    if (mealType === "dinner") return "Gastropub dinner or curry house";
+  }
+  if (cityLower.includes("san diego") || cityLower.includes("los angeles")) {
+    if (mealType === "breakfast") return "Cafe breakfast or acai bowl";
+    if (mealType === "lunch") return "Fish tacos or food truck";
+    if (mealType === "dinner") return "Seafood restaurant or taco stand + craft beer";
+  }
+  if (cityLower.includes("las vegas")) {
+    if (mealType === "breakfast") return "Casino cafe or off-Strip breakfast spot";
+    if (mealType === "lunch") return "Food court or Chinatown lunch";
+    if (mealType === "dinner") return "Strip restaurant or buffet";
+  }
+  if (cityLower.includes("mexico")) {
+    if (mealType === "breakfast") return "Chilaquiles or tamales from a street stall";
+    if (mealType === "lunch") return "Tacos al pastor or comida corrida";
+    if (mealType === "dinner") return "Mezcal bar + taqueria dinner";
+  }
+  if (cityLower.includes("bali") || cityLower.includes("indonesia")) {
+    if (mealType === "breakfast") return "Smoothie bowl or nasi goreng";
+    if (mealType === "lunch") return "Warung lunch — nasi campur or mie goreng";
+    if (mealType === "dinner") return "Beach restaurant or Ubud rice-paddy dining";
+  }
+  if (cityLower.includes("athens") || cityLower.includes("greece")) {
+    if (mealType === "breakfast") return "Bougatsa pastry + Greek coffee";
+    if (mealType === "lunch") return "Souvlaki or taverna mezze";
+    if (mealType === "dinner") return "Taverna dinner with grilled fish + ouzo";
+  }
+  // Generic fallback
+  return "";
+}
+
+// ─── Style-based meal descriptions ──────────────────────────────────────
+
+function styleMealDescription(
+  style: Style,
+  mealType: "breakfast" | "lunch" | "dinner",
+): string {
+  if (style === "budget") {
+    if (mealType === "breakfast") return "Bakery pastry + coffee";
+    if (mealType === "lunch") return "Market stall or food truck";
+    return "Local family-run restaurant";
+  }
+  if (style === "luxury") {
+    if (mealType === "breakfast") return "Hotel breakfast buffet";
+    if (mealType === "lunch") return "Fine casual dining";
+    return "Fine dining — reservations essential";
+  }
+  // comfort
+  if (mealType === "breakfast") return "Cafe breakfast with coffee";
+  if (mealType === "lunch") return "Sit-down restaurant";
+  return "Recommended local restaurant";
 }
 
 function activityEmoji(a: Activity): string {

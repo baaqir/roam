@@ -85,7 +85,7 @@ export const lasVegas: Destination = {
       durationHours: 4,
       tags: ["iconic", "outdoor", "free"],
       description:
-        "Self-guided evening walk hitting the famous resort lobbies and free attractions. The Bellagio fountains run every 15-30 min after 8pm.",
+        "Self-guided walk hitting the famous resort lobbies and free attractions — plan 3-4 hours to cover the central Strip. Best after sunset when the fountains, lights, and Volcano are all running. Pro tip: start at the Bellagio fountains (every 15 min after 8pm) and walk north.",
       recommended: true,
     },
     {
@@ -95,7 +95,7 @@ export const lasVegas: Destination = {
       durationHours: 2,
       tags: ["iconic", "nightlife", "culture"],
       description:
-        "One signature Cirque show — pricing is mid-tier seat. Book 2-3 weeks ahead.",
+        "One signature Cirque show — pricing is for a mid-tier seat. O (water) and KA (martial arts) are the top picks; Mystere is the best value. Pro tip: book 2-3 weeks ahead for good seats, or check the box office day-of for last-minute discounts.",
       recommended: true,
     },
     {
@@ -114,7 +114,7 @@ export const lasVegas: Destination = {
       durationHours: 4,
       tags: ["outdoor", "adventure"],
       description:
-        "13-mile scenic loop 30 min from the Strip. $20 per car. Calico Tanks is a quick rewarding hike.",
+        "13-mile scenic loop 30 min from the Strip with desert red-rock formations. Plan 3-4 hours for the drive plus a hike like Calico Tanks. Go early morning to beat the heat — the gate opens at 6am and fills by 9am on weekends.",
       recommended: true,
     },
     {
@@ -124,7 +124,7 @@ export const lasVegas: Destination = {
       durationHours: 4,
       tags: ["nightlife", "iconic"],
       description:
-        "Old Vegas downtown — light show overhead, then head east of the canopy for the indie bar district.",
+        "Old Vegas downtown — the Viva Vision light show canopy runs hourly after dark, then head east of the canopy for the indie bar district. Best at night; plan 3-4 hours. Pro tip: Fremont East bars are cheaper and less crowded than the Strip.",
     },
     {
       id: "high-roller",

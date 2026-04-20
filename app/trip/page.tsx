@@ -78,14 +78,66 @@ export default async function TripPage({
     plan = await planAnyTrip(input);
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Failed to plan trip.";
+    const isNetworkError =
+      msg.toLowerCase().includes("fetch") ||
+      msg.toLowerCase().includes("network") ||
+      msg.toLowerCase().includes("timeout") ||
+      msg.toLowerCase().includes("econnrefused");
+    const cityDisplay = input.city
+      ? input.city.charAt(0).toUpperCase() + input.city.slice(1)
+      : "your destination";
+
+    // Build retry URL preserving existing params
+    const retryParams = new URLSearchParams();
+    if (input.city) retryParams.set("city", input.city);
+    if (input.nights) retryParams.set("nights", String(input.nights));
+    if (input.travelers) retryParams.set("travelers", String(input.travelers));
+    if (input.style) retryParams.set("style", input.style);
+    const retryUrl = `/?${retryParams.toString()}`;
+
     return (
       <main className="mx-auto max-w-2xl px-6 py-16 text-center animate-fade-in-up">
-        <p className="card-premium rounded-xl border border-red-300 dark:border-red-800 p-6 text-red-800 dark:text-red-300" role="alert">
-          {msg}
-        </p>
-        <Link href="/" className="mt-6 inline-block text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200">
-          &larr; Try again
-        </Link>
+        <div className="card-premium rounded-2xl p-8">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/40">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-600 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+
+          {isNetworkError ? (
+            <>
+              <h2 className="text-lg font-bold text-[var(--fg)] mb-2">Connection issue</h2>
+              <p className="text-sm text-[var(--muted)] leading-relaxed mb-6">
+                We couldn&apos;t reach our data sources. Check your connection and try again.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-lg font-bold text-[var(--fg)] mb-2">
+                Couldn&apos;t plan a trip to {cityDisplay}
+              </h2>
+              <p className="text-sm text-[var(--muted)] leading-relaxed mb-2">{msg}</p>
+              <p className="text-sm text-[var(--muted)] leading-relaxed mb-6">
+                Try one of our curated cities: Barcelona, Tokyo, Paris, Bali, or Cape Town.
+              </p>
+            </>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href={retryUrl}
+              className="btn-gold rounded-xl px-6 py-3 text-sm"
+            >
+              Try again
+            </Link>
+            <Link
+              href="/"
+              className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors duration-200"
+            >
+              Plan a different trip
+            </Link>
+          </div>
+        </div>
       </main>
     );
   }
@@ -181,7 +233,8 @@ export default async function TripPage({
 
         {/* Local tips (for curated destinations with tips) */}
         {tips.length > 0 && (
-          <div className="mt-8" style={{ animationDelay: "250ms" }}>
+          <div className="mt-12" style={{ animationDelay: "250ms" }}>
+            <hr className="divider-gradient mb-12" />
             <div className="animate-fade-in-up" style={{ animationDelay: "250ms" }}>
               <LocalTips plan={singlePlanCompat} />
             </div>
@@ -189,7 +242,7 @@ export default async function TripPage({
         )}
 
         {checklist.length > 0 && (
-          <div className="mt-8" style={{ animationDelay: "400ms" }}>
+          <div className="mt-12" style={{ animationDelay: "400ms" }}>
             <div className="animate-fade-in-up" style={{ animationDelay: "400ms" }}>
               <PreDepartureChecklist plan={singlePlanCompat} />
             </div>
@@ -197,21 +250,21 @@ export default async function TripPage({
         )}
 
         {/* Packing suggestions */}
-        <div className="mt-8" style={{ animationDelay: "450ms" }}>
+        <div className="mt-12" style={{ animationDelay: "450ms" }}>
           <div className="animate-fade-in-up" style={{ animationDelay: "450ms" }}>
             <PackingSuggestions plan={singlePlanCompat} />
           </div>
         </div>
 
         {/* Trip Notes (Feature 8) */}
-        <div className="mt-8" style={{ animationDelay: "500ms" }}>
+        <div className="mt-12" style={{ animationDelay: "500ms" }}>
           <div className="animate-fade-in-up" style={{ animationDelay: "500ms" }}>
             <TripNotes input={plan.input} />
           </div>
         </div>
 
         {plan.assumptions.length > 0 && (
-          <details className="mt-8 card-premium rounded-2xl p-6 print-assumptions">
+          <details className="mt-12 card-premium rounded-2xl p-6 print-assumptions">
             <summary className="cursor-pointer text-sm font-semibold text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-200">
               Assumptions & notes
             </summary>

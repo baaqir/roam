@@ -82,7 +82,7 @@ export function TripHero({ plan, multiPlan, heroImage, bookingLinks }: Props) {
   const displayPerPerson = isMulti ? multiPlan.perPerson : plan.perPerson;
 
   return (
-    <div className="text-center animate-fade-in-up">
+    <div className="trip-hero text-center animate-fade-in-up">
       {/* Destination hero image */}
       {heroImage && (
         <div className="relative -mx-6 -mt-6 mb-8 h-56 overflow-hidden rounded-2xl">

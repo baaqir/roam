@@ -390,7 +390,7 @@ export function EditableItinerary({
   return (
     <div className="space-y-6">
       <div className="flex items-baseline justify-between">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+        <h2 className="text-base font-bold tracking-tight text-[var(--fg)]">
           Your Itinerary
         </h2>
         {costDelta !== 0 && (

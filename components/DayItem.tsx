@@ -20,9 +20,18 @@ type Props = {
   bookingUrl?: string;
 };
 
+function getTimingHint(item: DayItemType): string | null {
+  const text = `${item.title} ${item.description ?? ""}`.toLowerCase();
+  if (text.includes("sunset") || text.includes("golden hour")) return "Best at sunset";
+  if (text.includes("early morning") || text.includes("at opening") || text.includes("before 8am") || text.includes("sunrise")) return "Best in the morning";
+  if (text.includes("after dark") || text.includes("night") || text.includes("evening") || text.includes("after 8pm") || text.includes("after 10pm")) return "Evening activity";
+  return null;
+}
+
 export function DayItem({ item, travelers, onRemove, onActivityClick, onMove, totalDays, currentDay, isHighlighted, bookingUrl }: Props) {
   const totalCost = item.costPerPerson * travelers;
   const { fmt } = useCurrency();
+  const timingHint = item.type === "activity" ? getTimingHint(item) : null;
   return (
     <div className="relative flex items-start gap-3 py-3 group">
       {isHighlighted && (
@@ -34,7 +43,7 @@ export function DayItem({ item, travelers, onRemove, onActivityClick, onMove, to
           {item.activityId && onActivityClick ? (
             <button
               onClick={() => onActivityClick(item.activityId!)}
-              className="font-medium text-[var(--fg)] hover:text-[var(--accent)] transition-colors duration-200 text-left cursor-pointer"
+              className="font-medium text-[var(--fg)] hover:text-[var(--accent)] transition-colors duration-200 text-left cursor-pointer min-h-[44px] flex items-center"
             >
               {item.title}
             </button>
@@ -108,8 +117,13 @@ export function DayItem({ item, travelers, onRemove, onActivityClick, onMove, to
             {item.description}
           </p>
         )}
-        {item.durationHours != null && item.durationHours > 0 && (
-          <span className="text-xs text-[var(--muted)]">~{item.durationHours}h</span>
+        {((item.durationHours != null && item.durationHours > 0) || timingHint) && (
+          <div className="flex items-center gap-2 mt-0.5">
+            {item.durationHours != null && item.durationHours > 0 && (
+              <span className="text-xs text-[var(--muted)]">~{item.durationHours}h</span>
+            )}
+            {timingHint && <span className="chip-silver text-[10px]">{timingHint}</span>}
+          </div>
         )}
       </div>
     </div>

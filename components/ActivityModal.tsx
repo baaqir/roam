@@ -101,6 +101,11 @@ export function ActivityModal({
         aria-modal="true"
         aria-label={activity.name}
       >
+        {/* Mobile drag handle */}
+        <div className="sm:hidden flex justify-center pt-2 pb-1">
+          <div className="h-1 w-10 rounded-full bg-[var(--silver-300)]" />
+        </div>
+
         {/* Close button */}
         <button
           onClick={onClose}

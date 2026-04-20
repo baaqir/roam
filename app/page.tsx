@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CityInput } from "@/components/CityInput";
 import { StylePicker } from "@/components/StylePicker";
@@ -141,6 +141,8 @@ function HomeInner() {
     setProfileExists(checkHasProfile());
   }, []);
 
+  const mainRef = useRef<HTMLElement>(null);
+
   const isMultiCity = legs.length >= 2;
 
   // Determine if we can submit
@@ -152,6 +154,8 @@ function HomeInner() {
     (e?: React.FormEvent) => {
       if (e) e.preventDefault();
       const profile = getProfile() ?? undefined;
+
+      let url: string;
       if (isMultiCity) {
         if (!legs.every((l) => l.city.trim())) return;
         const tripLegs: TripLeg[] = legs.map((l) => ({
@@ -169,7 +173,7 @@ function HomeInner() {
           legs: tripLegs,
           profile,
         });
-        router.push(`/trip?${params.toString()}`);
+        url = `/trip?${params.toString()}`;
       } else {
         if (!city.trim()) return;
         const params = encodeTripInput({
@@ -181,8 +185,14 @@ function HomeInner() {
           origin,
           profile,
         });
-        router.push(`/trip?${params.toString()}`);
+        url = `/trip?${params.toString()}`;
       }
+
+      // Trigger exit animation, then navigate
+      mainRef.current?.classList.add("animate-fade-out-down");
+      setTimeout(() => {
+        router.push(url);
+      }, 200);
     },
     [city, nights, travelers, style, startDate, origin, router, legs, isMultiCity],
   );
@@ -236,12 +246,12 @@ function HomeInner() {
   useKeyboardShortcuts(shortcuts);
 
   return (
-    <main className="mx-auto max-w-xl px-6 py-8 pb-16 animate-fade-in-up">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold tracking-tight text-gradient-gold">
+    <main ref={mainRef} className="mx-auto max-w-xl px-6 py-8 pb-16">
+      <div className="text-center mb-8 animate-fade-in-up" style={{ animationDelay: "0ms" }}>
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gradient-gold">
           Where to next?
         </h1>
-        <p className="mt-3 text-[var(--muted)] text-base leading-relaxed">
+        <p className="mt-4 text-[var(--muted)] text-base leading-relaxed">
           Type a city, set your style, and get a complete trip plan with
           budget and day-by-day itinerary.
         </p>
@@ -251,14 +261,14 @@ function HomeInner() {
         {/* ─── Single-city mode: top-level city + nights ─── */}
         {!isMultiCity && (
           <>
-            <div className="card-premium rounded-2xl p-5">
+            <div className="card-premium rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: "50ms" }}>
               <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
                 Where are you going?
               </label>
-              <CityInput value={city} onChange={setCity} />
+              <CityInput value={city} onChange={setCity} autoFocus />
             </div>
 
-            <div className="card-premium rounded-2xl p-5">
+            <div className="card-premium rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
               <label htmlFor="start-date" className="mb-2 block text-sm font-medium text-[var(--muted)]">
                 When?
               </label>
@@ -272,7 +282,7 @@ function HomeInner() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
               <div className="card-premium rounded-2xl p-5">
                 <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
                   Nights
@@ -352,27 +362,29 @@ function HomeInner() {
           + Add another city
         </button>
 
-        <div>
+        <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
           <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
             Trip style
           </label>
           <StylePicker value={style} onChange={setStyle} />
         </div>
 
-        <button
-          type="submit"
-          disabled={!canSubmit}
-          className="btn-gold w-full rounded-xl px-6 py-4 text-lg"
-        >
-          {isMultiCity ? "Plan my multi-city trip" : "Plan my trip"} &rarr;
-        </button>
+        <div className="animate-fade-in-up" style={{ animationDelay: "250ms" }}>
+          <button
+            type="submit"
+            disabled={!canSubmit}
+            className={`btn-gold w-full rounded-xl px-6 py-4 text-lg ${canSubmit ? "btn-gold-ready" : ""}`}
+          >
+            {isMultiCity ? "Plan my multi-city trip" : "Plan my trip"} &rarr;
+          </button>
 
-        <p className="text-center text-xs text-[var(--muted)]">
-          <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1.5 py-0.5 text-[10px] font-mono">
-            {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "\u2318" : "Ctrl"}+Enter
-          </kbd>{" "}
-          to submit
-        </p>
+          <p className="mt-4 text-center text-xs text-[var(--muted)]">
+            <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1.5 py-0.5 text-[10px] font-mono">
+              {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "\u2318" : "Ctrl"}+Enter
+            </kbd>{" "}
+            to submit
+          </p>
+        </div>
       </form>
 
       {/* Profile banner: shown when no profile exists yet */}
@@ -381,7 +393,7 @@ function HomeInner() {
           <button
             type="button"
             onClick={() => setShowProfile(true)}
-            className="card-premium card-premium-hover w-full rounded-2xl p-5 text-left"
+            className="w-full rounded-2xl border-l-[3px] border-l-[var(--gold-400)] bg-[var(--surface)] p-5 text-left shadow-sm transition-all duration-200 hover:shadow-md"
           >
             <div className="flex items-center gap-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-500)] text-lg text-white">
@@ -425,27 +437,35 @@ function NightsStepper({
   value: number;
   onChange: (v: number) => void;
 }) {
+  const [bouncing, setBouncing] = useState(false);
+
+  function handleChange(newVal: number) {
+    onChange(newVal);
+    setBouncing(true);
+    setTimeout(() => setBouncing(false), 200);
+  }
+
   return (
     <div className="flex items-center gap-3">
       <button
         type="button"
-        onClick={() => onChange(Math.max(1, value - 1))}
+        onClick={() => handleChange(Math.max(1, value - 1))}
         aria-label="Decrease nights"
-        className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
       >
         -
       </button>
       <div
-        className="flex-1 text-center text-2xl font-bold tabular-nums text-[var(--fg)]"
+        className={`flex-1 text-center text-2xl font-bold tabular-nums text-[var(--fg)] ${bouncing ? "animate-stepper-bounce" : ""}`}
         aria-live="polite"
       >
         {value}
       </div>
       <button
         type="button"
-        onClick={() => onChange(Math.min(30, value + 1))}
+        onClick={() => handleChange(Math.min(30, value + 1))}
         aria-label="Increase nights"
-        className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
       >
         +
       </button>
@@ -460,27 +480,35 @@ function TravelersStepper({
   value: number;
   onChange: (fn: (prev: number) => number) => void;
 }) {
+  const [bouncing, setBouncing] = useState(false);
+
+  function handleChange(fn: (prev: number) => number) {
+    onChange(fn);
+    setBouncing(true);
+    setTimeout(() => setBouncing(false), 200);
+  }
+
   return (
     <div className="flex items-center gap-3">
       <button
         type="button"
-        onClick={() => onChange((n) => Math.max(1, n - 1))}
+        onClick={() => handleChange((n) => Math.max(1, n - 1))}
         aria-label="Decrease travelers"
-        className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
       >
         -
       </button>
       <div
-        className="flex-1 text-center text-2xl font-bold tabular-nums text-[var(--fg)]"
+        className={`flex-1 text-center text-2xl font-bold tabular-nums text-[var(--fg)] ${bouncing ? "animate-stepper-bounce" : ""}`}
         aria-live="polite"
       >
         {value}
       </div>
       <button
         type="button"
-        onClick={() => onChange((n) => Math.min(8, n + 1))}
+        onClick={() => handleChange((n) => Math.min(8, n + 1))}
         aria-label="Increase travelers"
-        className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
       >
         +
       </button>

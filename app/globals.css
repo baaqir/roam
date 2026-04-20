@@ -94,6 +94,10 @@ html.dark {
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
   background: var(--bg);
   color: var(--fg);
@@ -234,6 +238,11 @@ html.dark ::-webkit-scrollbar-thumb {
     opacity: 0.4;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
+  }
+  .btn-gold:disabled:hover {
+    transform: none;
+    box-shadow: none;
   }
 
   /* Warm gradient background */
@@ -521,6 +530,81 @@ html.dark ::-webkit-scrollbar-thumb {
   animation: page-fade-in 0.3s var(--ease-out-soft) both;
 }
 
+/* Page exit: fade out + slide down */
+@keyframes fade-out-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.animate-fade-out-down {
+  animation: fade-out-down 200ms var(--ease-out-soft) both;
+}
+
+/* Stepper number bounce */
+@keyframes stepper-bounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.animate-stepper-bounce {
+  animation: stepper-bounce 200ms var(--ease-out-soft);
+}
+
+/* Submit button ready pulse glow */
+@keyframes btn-ready-pulse {
+  0%, 100% {
+    box-shadow: var(--shadow-sm),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 0 0 rgba(197, 150, 74, 0);
+  }
+  50% {
+    box-shadow: var(--shadow-sm),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 12px 2px rgba(197, 150, 74, 0.25);
+  }
+}
+
+.btn-gold-ready {
+  animation: btn-ready-pulse 2s ease-in-out infinite;
+}
+.btn-gold-ready:hover {
+  animation: none;
+  box-shadow: var(--shadow-md),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              0 0 16px 4px rgba(197, 150, 74, 0.3);
+  transform: translateY(-1px);
+}
+
+/* City input checkmark flash */
+@keyframes check-flash {
+  0% { opacity: 0; transform: scale(0.5); }
+  30% { opacity: 1; transform: scale(1.1); }
+  60% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+.animate-check-flash {
+  animation: check-flash 500ms var(--ease-out-soft) both;
+}
+
+/* Loading screen logo shimmer background */
+@keyframes logo-shimmer {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+.animate-logo-shimmer {
+  animation: logo-shimmer 2s ease-in-out infinite;
+}
+
 /* Hide scrollbar for DayNav horizontal scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
@@ -528,6 +612,19 @@ html.dark ::-webkit-scrollbar-thumb {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ─── Bottom nav safe area ─────────────────────────────────────────── */
+/* Add bottom padding on mobile so content isn't hidden behind fixed bottom nav */
+@media (max-width: 639px) {
+  body {
+    padding-bottom: 56px;
+  }
+}
+
+/* z-index between z-40 and z-50 for sticky trip summary */
+.z-45 {
+  z-index: 45;
 }
 
 /* ─── Accessibility: Screen-reader only ────────────────────────────── */

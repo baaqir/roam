@@ -118,7 +118,7 @@ export const sanDiego: Destination = {
       durationHours: 4,
       tags: ["iconic", "outdoor", "culture", "free"],
       description:
-        "1,200-acre cultural park with 17 museums, gardens, and Spanish Colonial architecture. Free to walk; museums extra.",
+        "1,200-acre cultural park with 17 museums, gardens, and Spanish Colonial architecture. Free to walk; plan 3-4 hours for the gardens alone, longer if you add museums. Best in the morning before it heats up.",
       recommended: true,
     },
     {
@@ -128,7 +128,7 @@ export const sanDiego: Destination = {
       durationHours: 5,
       tags: ["iconic", "family", "outdoor"],
       description:
-        "World-renowned zoo inside Balboa Park. Single-day adult ticket includes the Skyfari aerial tram and bus tour.",
+        "World-renowned zoo inside Balboa Park — plan 4-5 hours, or a full day if you add the safari park. Arrive at opening for active animals and shorter lines. Pro tip: buy online to skip the ticket window.",
       recommended: true,
     },
     {
@@ -138,7 +138,7 @@ export const sanDiego: Destination = {
       durationHours: 3,
       tags: ["iconic", "culture", "family"],
       description:
-        "Decommissioned aircraft carrier turned museum on the downtown waterfront. ~30 restored aircraft on the flight deck.",
+        "Decommissioned aircraft carrier turned museum on the downtown waterfront with ~30 restored aircraft. Plan 2-3 hours, or 4+ if you do the audio tour on the flight deck. Pro tip: go early morning to avoid school groups.",
       recommended: true,
     },
     {
@@ -148,7 +148,7 @@ export const sanDiego: Destination = {
       durationHours: 2,
       tags: ["outdoor", "adventure"],
       description:
-        "Guided 90-minute kayak tour through the La Jolla Ecological Reserve — sea lions, leopard sharks (harmless), seven sea caves.",
+        "Guided 90-minute kayak tour through the La Jolla Ecological Reserve — sea lions, leopard sharks (harmless), seven sea caves. Best on calm mornings; afternoon wind picks up. Pro tip: book 2 weeks ahead, walk-ups often sell out by 10am.",
       recommended: true,
     },
     {

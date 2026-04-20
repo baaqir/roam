@@ -22,11 +22,18 @@ export default function TripLoading() {
   return (
     <main className="mx-auto max-w-2xl px-6 py-24">
       <div className="text-center animate-fade-in-up">
-        <div
-          className="mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-600)]"
-          style={{ animation: "spin-slow 3s linear infinite" }}
-        >
-          <span className="text-2xl text-white font-bold">R</span>
+        {/* Logo with shimmer background */}
+        <div className="relative mx-auto mb-8 h-16 w-16">
+          <div
+            className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-600)] animate-logo-shimmer blur-lg"
+            aria-hidden="true"
+          />
+          <div
+            className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-600)]"
+            style={{ animation: "spin-slow 3s linear infinite" }}
+          >
+            <span className="text-2xl text-white font-bold">R</span>
+          </div>
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-[var(--fg)]">
           Planning your trip...
@@ -34,44 +41,56 @@ export default function TripLoading() {
         <p className="mt-2 text-[var(--muted)]">
           Crafting the perfect itinerary
         </p>
-        <div className="mt-10 space-y-3">
+        <div className="mt-10 flex flex-col items-center">
           {STEPS.map((label, i) => {
             const isCompleted = i < activeStep;
             const isActive = i === activeStep;
             const isPending = i > activeStep;
 
             return (
-              <div
-                key={label}
-                className={`flex items-center justify-center gap-3 text-sm transition-all duration-300 ${
-                  isPending
-                    ? "text-[var(--muted)] opacity-40"
-                    : isActive
-                      ? "text-[var(--fg)]"
-                      : "text-[var(--muted)]"
-                }`}
-              >
-                {isCompleted && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-[var(--gold-400)]"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+              <div key={label} className="flex flex-col items-center">
+                {/* Connecting line above (not for first step) */}
+                {i > 0 && (
+                  <div
+                    className="w-0.5 h-4 transition-colors duration-300"
+                    style={{
+                      backgroundColor: isCompleted || isActive
+                        ? "var(--gold-400)"
+                        : "var(--silver-300)",
+                    }}
+                  />
                 )}
-                {isActive && (
-                  <div className="h-2.5 w-2.5 rounded-full bg-[var(--gold-400)] animate-gold-pulse" />
-                )}
-                {isPending && (
-                  <div className="h-2 w-2 rounded-full bg-[var(--silver-300)]" />
-                )}
-                <span className={isActive ? "font-medium" : ""}>{label}</span>
+                <div
+                  className={`flex items-center gap-3 text-sm transition-all duration-300 py-1 ${
+                    isPending
+                      ? "text-[var(--muted)] opacity-40"
+                      : isActive
+                        ? "text-[var(--fg)]"
+                        : "text-[var(--muted)]"
+                  }`}
+                >
+                  {isCompleted && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-[var(--gold-400)]"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                  {isActive && (
+                    <div className="h-2.5 w-2.5 rounded-full bg-[var(--gold-400)] animate-gold-pulse" />
+                  )}
+                  {isPending && (
+                    <div className="h-2 w-2 rounded-full bg-[var(--silver-300)]" />
+                  )}
+                  <span className={isActive ? "font-medium" : ""}>{label}</span>
+                </div>
               </div>
             );
           })}
@@ -81,6 +100,9 @@ export default function TripLoading() {
             <div className="h-full rounded-full animate-shimmer" />
           </div>
         </div>
+        <p className="mt-6 text-[10px] text-[var(--muted)]">
+          Usually takes 2&ndash;5 seconds
+        </p>
       </div>
     </main>
   );

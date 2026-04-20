@@ -10,6 +10,35 @@ import {
   getConfidenceMargin,
 } from "./ConfidenceBadge";
 
+/** Extract a contextual flight cost note from assumptions. */
+function buildFlightContext(assumptions?: string[]): string | null {
+  if (!assumptions || assumptions.length === 0) return null;
+  const text = assumptions.join(" ");
+
+  // Extract origin airport
+  const originMatch = text.match(/Flying from ([^(]+)/);
+  const origin = originMatch ? originMatch[1].trim().replace(/\.$/, "") : null;
+
+  // Extract season info
+  const seasonMatch = text.match(/(\w+) flights: ([^(]+)\(/);
+  const seasonMonth = seasonMatch ? seasonMatch[1] : null;
+  const seasonLabel = seasonMatch ? seasonMatch[2].trim() : null;
+
+  const parts: string[] = [];
+  if (seasonLabel && seasonMonth) {
+    parts.push(`Based on ${seasonLabel.toLowerCase()} economy fares in ${seasonMonth}`);
+  } else {
+    parts.push("Based on shoulder-season economy fares");
+  }
+  if (origin) {
+    parts[0] += ` from ${origin}`;
+  }
+  parts[0] += ".";
+  parts.push("Actual prices vary by airline and booking date. Book 2-3 months ahead for best rates.");
+
+  return parts.join(" ");
+}
+
 const EMOJIS: Record<string, string> = {
   flights: "\u2708\uFE0F",
   lodging: "\uD83C\uDFE8",
@@ -48,6 +77,7 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
     ? getConfidenceLevel(assumptions)
     : "high";
   const margin = getConfidenceMargin(confidenceLevel);
+  const flightContext = useMemo(() => buildFlightContext(assumptions), [assumptions]);
 
   // For multi-city: build per-category per-city breakdown
   const perCityDetail = useMemo(() => {
@@ -65,7 +95,7 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
 
   return (
     <div className="card-premium rounded-2xl p-6">
-      <div className="mb-5 flex items-center gap-2">
+      <div className="mb-4 flex items-center gap-2">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
           Budget Breakdown
         </h2>
@@ -73,6 +103,7 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
           <ConfidenceBadge level={confidenceLevel} />
         )}
       </div>
+      <hr className="divider-gradient mb-5" />
       <div className="space-y-4" role="list" aria-label="Budget categories">
         {rows.map((row) => {
           const expanded = expandedKey === row.key;
@@ -120,7 +151,7 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
                     />
                   </div>
                 </div>
-                <span className="w-10 text-right text-xs tabular-nums text-[var(--muted)]">
+                <span className="w-10 text-right text-xs font-semibold tabular-nums text-[var(--fg-secondary)]">
                   {row.pct}%
                 </span>
               </button>
@@ -135,6 +166,9 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
                     </p>
                   ) : (
                     <p>{row.detail}</p>
+                  )}
+                  {row.key === "flights" && flightContext && (
+                    <p className="text-[var(--muted)] italic">{flightContext}</p>
                   )}
                   {bookingUrl && bookingInfo?.text && (
                     <a

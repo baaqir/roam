@@ -1,8 +1,29 @@
 # Roam
 
-Personal trip-cost estimator, activity picker, and day-by-day itinerary builder. Built with Next.js 15 (App Router), TypeScript, and Tailwind. Real-time hotel and flight prices via Tavily web search + Claude Haiku extraction; smart fallback estimates when keys aren't set.
+AI-powered travel planner that builds detailed, day-by-day itineraries with honest cost estimates. Enter a destination, pick your style, and get a complete trip plan in seconds -- no account required.
 
-## Quick start
+**Live demo:** [roam-dusky.vercel.app](https://roam-dusky.vercel.app)
+
+---
+
+## Features
+
+- **Instant itineraries** -- day-by-day plans with activities, meals, and transport auto-scheduled by time of day
+- **Honest cost estimates** -- every number shows its assumptions; tap any budget row to see the breakdown
+- **18 curated cities** with hand-picked activities, neighborhood dining tips, and real lodging data
+- **Any city worldwide** -- type any destination and it auto-resolves via OpenStreetMap with region-correct pricing
+- **Multi-city trips** -- plan multi-leg itineraries with per-city budgets and connecting flights
+- **3 travel styles** -- budget, comfort, and luxury with style-specific lodging, food, and activity tiers
+- **Group cost splitting** -- 1-10 travelers with per-person breakdowns
+- **Editable plans** -- drag activities between days, add/remove items, customize your itinerary
+- **Save and share** -- trips persist in localStorage; share via URL
+- **Traveler profiles** -- pace, dietary needs, interests, and kid-friendly preferences shape the plan
+- **Live prices** (optional) -- real-time flight and hotel prices via Tavily + Claude Haiku when API keys are set
+- **Currency conversion** -- view costs in local currency with live exchange rates
+- **Dark mode** -- warm gold-on-dark theme, auto-detected or manual toggle
+- **Booking links** -- one-click search on Google Flights, Booking.com, and GetYourGuide
+
+## Quick Start
 
 ```bash
 npm install
@@ -10,83 +31,71 @@ npm run dev
 # open http://localhost:3000
 ```
 
-Out of the box you get **18 cities** with real airports, hand-picked activity catalogs, and region-correct flight pricing — all working fully offline:
+The app works fully offline with static data. No API keys needed for the core experience.
 
-- **3 deeply-curated** (San Diego, Los Angeles, Las Vegas) with city-specific lodging tiers seeded from real DirectBooker availability.
-- **15 bundled popular destinations**: Paris, London, Rome, Barcelona, Amsterdam, Lisbon, Athens, Tokyo, Bangkok, Bali, Dubai, NYC, Miami, Mexico City, Cancún. Lodging/food/transport use global tier averages; everything else is real.
-- 5 origin airports (NYC, SF Bay, LA, Chicago, Seattle).
-- Multi-city itineraries, group cost splitting, vibe filter, day-by-day planner, save/share trips.
+## Live Prices (Optional)
 
-Type **any other city** in the destination input (Reykjavik, Lagos, Tbilisi, Hanoi, anywhere) and the app auto-resolves it via free OpenStreetMap geocoding — real airport code, region-correct flight pricing, no API keys needed. Lodging/food/transport use global tier averages; activities are a generic catalog you can swap with your own.
+For real-time hotel and flight pricing, create `.env.local` from `.env.example` and add:
 
-For maximum accuracy, add API keys (see below) — flights and lodging then come from live web search.
+- `TAVILY_API_KEY` -- free tier at [tavily.com](https://tavily.com)
+- `ANTHROPIC_API_KEY` -- at [console.anthropic.com](https://console.anthropic.com)
 
-## Live prices (optional)
+The app auto-detects keys and shows a confidence badge accordingly. If a live call fails, it falls back to static estimates -- the UI never breaks.
 
-To get real-time hotel and flight prices on every estimate, copy `.env.example` to `.env.local` and add:
+## How It Works
 
-- `TAVILY_API_KEY` — free tier at https://tavily.com (search-as-an-LLM-tool)
-- `ANTHROPIC_API_KEY` — at https://console.anthropic.com (used for Claude Haiku 4.5 to extract structured prices from snippets)
+1. **You pick** a destination, dates, travel style, and number of travelers
+2. **Roam resolves** the city (curated data or auto-geocoded), calculates flights, lodging, food, transport, and activities
+3. **The planner** distributes activities across days by time-of-day preference (outdoor mornings, culture afternoons, nightlife evenings) and inserts neighborhood-aware meals
+4. **You customize** -- swap activities, move items between days, adjust your style
+5. **The budget** updates instantly with transparent per-category breakdowns and confidence ranges
 
-The app auto-detects whether keys are present and shows a "Live prices ✓" or "Estimated ⚡" badge accordingly. If a live call fails, it falls back to the static numbers — the UI never breaks.
+## Tech Stack
 
-## Verify
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with a custom warm-gold design system
+- **Data**: 18 curated cities, 150+ country airports, visa rules, seasonal pricing
+- **Free APIs**: OpenStreetMap Nominatim, Wikipedia, REST Countries, sunrise-sunset.org, Frankfurter
+- **Optional APIs**: Tavily (web search) + Claude Haiku (extraction) for live pricing
 
-1. Open http://localhost:3000
-2. Submit the default form (NYC → San Diego, 3 nights, 1 traveler, mid-tier)
-3. You should see a breakdown around **$1,500–$1,700** total with categories: Flights, Lodging, Food, Transport, Activities, Misc
-4. Toggle activities on/off and watch the totals update instantly
-5. Click any category row to see the underlying line items
+## Adding a New Destination
 
-You can also hit the API directly:
+1. Create `lib/data/destinations/<key>.ts` exporting a `Destination` (use `san-diego.ts` as a template)
+2. Register it in `lib/data/destinations/index.ts`
+3. Add flight pricing rows in `lib/data/origins.ts` for each origin airport
 
-```bash
-curl -X POST http://localhost:3000/api/estimate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "originKey": "nyc",
-    "destinationKey": "san-diego",
-    "startDate": "2026-04-20",
-    "nights": 3,
-    "travelers": 1,
-    "tier": "mid",
-    "transportMode": "rideshare",
-    "activityIds": ["balboa-park", "san-diego-zoo", "uss-midway", "la-jolla-cove-kayak", "sunset-cliffs"],
-    "useLivePrices": false
-  }'
-```
+The form, results page, and estimator pick up the new destination automatically.
 
-## Adding a new destination
-
-1. Drop a file at `lib/data/destinations/<key>.ts` exporting a `Destination`. Use `san-diego.ts` as a template — it's annotated with where each number comes from.
-2. Register it in `lib/data/destinations/index.ts`.
-3. For every origin in `lib/data/origins.ts`, add a row in `flightBasePrices` for the new destination key.
-
-That's the only change needed — the form, results page, estimator, and live search all pick the new destination up automatically.
-
-## Architecture
+## Project Structure
 
 ```
 app/                    Next.js routes
   page.tsx              Trip input form
-  trip/page.tsx         Server-rendered cost breakdown
-  api/estimate/route.ts JSON estimator endpoint
+  trip/page.tsx         Server-rendered results
+  api/estimate/         JSON estimator endpoint
 
 components/             Client React components
-  TripForm, CostBreakdown, CategoryRow, ActivityPicker, TripView
+  TripForm, TripHero, BudgetBreakdown, EditableItinerary, DayItem
 
 lib/                    Pure logic
-  estimate.ts           Orchestrator (live → fallback)
-  flights, lodging, food, transport, activities, misc.ts
-  data/                 Static destination + origin data
+  estimate.ts           Cost orchestrator (live + fallback)
+  plan.ts               Day-by-day itinerary builder
+  data/                 Static destination, origin, and pricing data
   search/               Tavily + Haiku live-pricing layer
-    tavily, extract, flights-live, lodging-live, cache.ts
 ```
 
-## Out of scope
+## Screenshots
 
-- Direct integrations with Amadeus / Skyscanner / Booking / Airbnb (live search via Tavily + Haiku is "good enough" without those API agreements)
-- Booking flow — surfaces source URLs, click through to book on the provider's site
-- Persistence — trip inputs live in URL params, no DB
-- Multiple destinations beyond San Diego (structure ready, data not yet)
-- Currencies other than USD
+_Coming soon._
+
+## Contributing
+
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Make your changes and run `npx tsc --noEmit` to check types
+4. Submit a pull request
+
+## License
+
+MIT

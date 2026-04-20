@@ -83,7 +83,7 @@ export const losAngeles: Destination = {
       durationHours: 3,
       tags: ["iconic", "outdoor", "free"],
       description:
-        "Free admission observatory with telescopes and the city's best Hollywood Sign view. Easy 2.5mi loop hike from the lot.",
+        "Free admission observatory with telescopes and LA's best Hollywood Sign view. Go at sunset for golden light on the sign and city lights after dark. Pro tip: parking fills by 11am on weekends — rideshare or take the DASH shuttle.",
       recommended: true,
     },
     {
@@ -93,7 +93,7 @@ export const losAngeles: Destination = {
       durationHours: 8,
       tags: ["iconic", "family"],
       description:
-        "Theme park + working studio backlot tour. Single-day adult ticket; arrive at open.",
+        "Theme park + working studio backlot tour. Plan a full day; arrive at park open and hit the big rides first. Pro tip: buy the Express Pass if visiting on a weekend — standby waits top 90 minutes by noon.",
     },
     {
       id: "venice-walk",
@@ -102,7 +102,7 @@ export const losAngeles: Destination = {
       durationHours: 2,
       tags: ["iconic", "outdoor", "free"],
       description:
-        "Boardwalk performers, Muscle Beach, then quiet canals south of Venice Blvd. Bring cash for vendors.",
+        "Boardwalk performers, Muscle Beach, then the quiet canals south of Venice Blvd. Best mid-morning through afternoon; the boardwalk thins out by sunset. Pro tip: walk the canals first while they're still peaceful, then loop back to the boardwalk.",
       recommended: true,
     },
     {
@@ -131,7 +131,7 @@ export const losAngeles: Destination = {
       durationHours: 4,
       tags: ["culture", "iconic", "free"],
       description:
-        "Free museum on a hilltop with a tram ride up. Parking is $25. Reserve a free entry slot online.",
+        "Free museum on a hilltop with a tram ride up — plan 3-4 hours for the galleries and gardens. Arrive after 3pm for golden light on the architecture and fewer crowds. Pro tip: reserve the free timed entry online; parking is $25 and fills early.",
     },
     {
       id: "kogi-truck-tour",

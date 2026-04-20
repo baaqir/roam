@@ -5,6 +5,7 @@ import type { DayPlan, MultiCityTripPlan, TripPlan } from "@/lib/types";
 import type { DayWeather } from "@/lib/weather";
 import { generateBookingLinks } from "@/lib/booking-links";
 import { TripHero } from "./TripHero";
+import { StickyTripSummary } from "./StickyTripSummary";
 import { BudgetBreakdown } from "./BudgetBreakdown";
 import { EditableItinerary } from "./EditableItinerary";
 import { TripActions } from "./TripActions";
@@ -73,13 +74,31 @@ export function TripPageClient({ plan, multiPlan, heroImage, weatherByDate, useF
     return boundaries;
   }, [multiPlan]);
 
+  // City name for the sticky summary bar
+  const isMulti = !!multiPlan;
+  const cityNames = isMulti
+    ? multiPlan.legs.map((l) => l.destination.name.split(",")[0].trim())
+    : [plan.destination.name.split(",")[0].trim()];
+  const summaryCity = isMulti ? cityNames.join(" / ") : cityNames[0];
+  const displayTotal = isMulti ? multiPlan.total : plan.total;
+  const displayPerPerson = isMulti ? multiPlan.perPerson : plan.perPerson;
+
   return (
     <>
-      <div style={{ animationDelay: "0ms" }} className="animate-fade-in-up">
+      <div style={{ animationDelay: "100ms" }} className="animate-fade-in-up">
         <TripHero plan={plan} multiPlan={multiPlan} heroImage={heroImage} bookingLinks={bookingLinks} />
       </div>
 
-      <div className="mt-10" style={{ animationDelay: "100ms" }}>
+      {/* Sticky budget summary — appears when hero scrolls out of view */}
+      <StickyTripSummary
+        cityName={summaryCity}
+        total={displayTotal}
+        perPerson={displayPerPerson}
+      />
+
+      <hr className="divider-gradient mt-12 mb-0" />
+
+      <div className="mt-12" style={{ animationDelay: "100ms" }}>
         <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
           <BudgetBreakdown
             rows={plan.breakdown}
@@ -90,7 +109,9 @@ export function TripPageClient({ plan, multiPlan, heroImage, weatherByDate, useF
         </div>
       </div>
 
-      <div className="mt-8" style={{ animationDelay: "200ms" }}>
+      <hr className="divider-gradient mt-12 mb-0" />
+
+      <div className="mt-12" style={{ animationDelay: "200ms" }}>
         <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
           <EditableItinerary
             plan={plan}
@@ -104,7 +125,9 @@ export function TripPageClient({ plan, multiPlan, heroImage, weatherByDate, useF
         </div>
       </div>
 
-      <div className="mt-10" style={{ animationDelay: "300ms" }}>
+      <hr className="divider-gradient mt-16 mb-0" />
+
+      <div className="mt-12" style={{ animationDelay: "300ms" }}>
         <div className="animate-fade-in-up" style={{ animationDelay: "300ms" }}>
           <TripActions
             plan={plan}

@@ -54,20 +54,20 @@ export function TripActions({ plan, customDays, hasEdits }: TripActionsProps) {
 
   return (
     <div className="no-print flex flex-col items-center gap-3">
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      <div className="grid grid-cols-2 gap-3 w-full max-w-sm sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:max-w-none">
         <ActionButton onClick={handleSave} primary ref={saveRef}>
           Save to my trips
         </ActionButton>
         <ActionButton onClick={handleShare}>Share link</ActionButton>
         <ActionButton onClick={handlePrint}>Print / PDF</ActionButton>
         <ActionButton onClick={handleCalendar}>Add to calendar</ActionButton>
-        <button
-          onClick={() => router.push("/trips")}
-          className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] hover:underline transition-colors duration-200"
-        >
-          View in My Trips &rarr;
-        </button>
       </div>
+      <button
+        onClick={() => router.push("/trips")}
+        className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] hover:underline transition-colors duration-200"
+      >
+        View in My Trips &rarr;
+      </button>
       {/* Bug 5: Warn that shared links don't preserve edits */}
       {hasEdits && (
         <p className="text-xs text-[var(--muted)] text-center max-w-md">

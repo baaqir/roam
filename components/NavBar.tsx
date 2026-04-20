@@ -51,6 +51,7 @@ export function NavBar() {
             <div className="flex gap-4 text-sm">
               <NavLink href="/" label="Plan" active={path === "/"} />
               <NavLink href="/trips" label="My Trips" active={path === "/trips"} />
+              <NavLink href="/about" label="About" active={path === "/about"} />
             </div>
           </div>
           <div className="flex items-center gap-3">

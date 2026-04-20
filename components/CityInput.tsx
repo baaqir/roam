@@ -6,15 +6,9 @@ import { listDestinations } from "@/lib/data/destinations";
 type Props = {
   value: string;
   onChange: (city: string) => void;
-  /** Auto-focus the input on mount. */
   autoFocus?: boolean;
 };
 
-/**
- * Simple city text input with a lightweight suggestion list.
- * No complex combobox -- just a text field that shows curated cities
- * when the user focuses or types, and lets them type anything.
- */
 export function CityInput({ value, onChange, autoFocus }: Props) {
   const [text, setText] = useState(value);
   const [open, setOpen] = useState(false);
@@ -22,29 +16,38 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-focus on mount when requested
   useEffect(() => {
     if (autoFocus) {
-      // Small delay to ensure the DOM is ready after stagger animations
       const t = setTimeout(() => inputRef.current?.focus(), 100);
       return () => clearTimeout(t);
     }
   }, [autoFocus]);
 
-  // Curated suggestions (loaded once).
   const suggestions = listDestinations().map((d) => ({
     key: d.key,
     label: d.name,
   }));
 
   const query = text.toLowerCase().trim();
+
+  // Only show suggestions when user has typed something (filter matches),
+  // NOT on empty focus. This makes it feel like a search, not a dropdown.
   const filtered = query
     ? suggestions.filter(
         (s) =>
           s.label.toLowerCase().includes(query) ||
           s.key.includes(query),
       )
-    : suggestions.slice(0, 8); // show top 8 when empty
+    : [];
+
+  // Show the "search for X" option when text doesn't match a curated city
+  const isCustomCity =
+    text.trim().length > 0 &&
+    !suggestions.some(
+      (s) => s.label.toLowerCase() === query || s.key === query,
+    );
+
+  const hasDropdownContent = filtered.length > 0 || isCustomCity;
 
   function commit(val: string) {
     setText(val);
@@ -57,17 +60,17 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
     onChange(key);
     setOpen(false);
     inputRef.current?.blur();
-    // Flash checkmark to confirm selection
     setShowCheck(true);
     setTimeout(() => setShowCheck(false), 500);
   }
 
-  // Close on outside click.
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
-        // Commit whatever is typed.
         if (text.trim()) onChange(text.trim());
       }
     }
@@ -84,10 +87,12 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
           value={text}
           onChange={(e) => {
             setText(e.target.value);
-            onChange(e.target.value.trim()); // eager commit
+            onChange(e.target.value.trim());
             setOpen(true);
           }}
-          onFocus={() => setOpen(true)}
+          onFocus={() => {
+            if (text.trim()) setOpen(true);
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -99,28 +104,55 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
               inputRef.current?.blur();
             }
           }}
-          placeholder="Barcelona, Tokyo, Lagos..."
+          placeholder="Type any city — Paris, Bali, Lagos, anywhere"
           autoComplete="off"
           spellCheck={false}
           aria-label="Destination city"
           role="combobox"
-          aria-expanded={open && filtered.length > 0}
+          aria-expanded={open && hasDropdownContent}
           aria-haspopup="listbox"
           className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-lg text-[var(--fg)] placeholder:text-[var(--muted)] focus-ring transition-all duration-200"
         />
         {showCheck && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 animate-check-flash pointer-events-none" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          <span
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 animate-check-flash pointer-events-none"
+            aria-hidden="true"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
             </svg>
           </span>
         )}
       </div>
-      {open && filtered.length > 0 && (
-        <ul className="absolute z-30 mt-2 max-h-64 w-full overflow-auto rounded-xl border border-[var(--border-subtle)] glass py-1 animate-fade-in"
-            role="listbox"
-            aria-label="City suggestions"
-            style={{ boxShadow: "var(--shadow-lg)" }}>
+
+      {/* Helper text — always visible below the input */}
+      <p className="mt-2 text-xs text-[var(--muted)]">
+        Works for any city in the world. 18 cities have curated data; everywhere
+        else is auto-resolved.
+      </p>
+
+      {/* Suggestions dropdown — only when user is typing */}
+      {open && hasDropdownContent && (
+        <ul
+          className="absolute z-30 mt-1 max-h-64 w-full overflow-auto rounded-xl border border-[var(--border-subtle)] glass py-1 animate-fade-in"
+          role="listbox"
+          aria-label="City suggestions"
+          style={{ boxShadow: "var(--shadow-lg)" }}
+        >
+          {filtered.length > 0 && (
+            <li className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+              Curated cities
+            </li>
+          )}
           {filtered.map((s) => (
             <li key={s.key}>
               <button
@@ -129,23 +161,29 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
                   e.preventDefault();
                   selectSuggestion(s.key, s.label);
                 }}
-                className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-[var(--fg)] hover:bg-[var(--gold-50)] transition-colors duration-150"
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--fg)] hover:bg-[var(--gold-50)] transition-colors duration-150"
               >
-                {s.label}
+                <span>{s.label}</span>
+                <span className="chip-gold text-[9px]">curated</span>
               </button>
             </li>
           ))}
-          {text.trim() && !suggestions.some((s) => s.label.toLowerCase() === query || s.key === query) && (
-            <li className="border-t border-[var(--border-subtle)]">
+          {isCustomCity && (
+            <li className={filtered.length > 0 ? "border-t border-[var(--border-subtle)]" : ""}>
               <button
                 type="button"
                 onMouseDown={(e) => {
                   e.preventDefault();
                   commit(text.trim());
                 }}
-                className="block w-full px-4 py-2.5 text-left text-sm italic text-[var(--muted)] hover:bg-[var(--gold-50)] transition-colors duration-150"
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--fg)] hover:bg-[var(--gold-50)] transition-colors duration-150"
               >
-                Search for &ldquo;{text.trim()}&rdquo;
+                <span>
+                  Plan a trip to <strong>{text.trim()}</strong>
+                </span>
+                <span className="text-[10px] text-[var(--muted)]">
+                  any city
+                </span>
               </button>
             </li>
           )}

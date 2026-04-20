@@ -188,11 +188,7 @@ function HomeInner() {
         url = `/trip?${params.toString()}`;
       }
 
-      // Trigger exit animation, then navigate
-      mainRef.current?.classList.add("animate-fade-out-down");
-      setTimeout(() => {
-        router.push(url);
-      }, 200);
+      router.push(url);
     },
     [city, nights, travelers, style, startDate, origin, router, legs, isMultiCity],
   );
@@ -246,8 +242,8 @@ function HomeInner() {
   useKeyboardShortcuts(shortcuts);
 
   return (
-    <main ref={mainRef} className="mx-auto max-w-xl px-6 py-8 pb-16">
-      <div className="text-center mb-8 animate-fade-in-up" style={{ animationDelay: "0ms" }}>
+    <main ref={mainRef} className="mx-auto max-w-xl px-6 py-8 pb-16 animate-fade-in-up">
+      <div className="text-center mb-8">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gradient-gold">
           Where to next?
         </h1>
@@ -261,14 +257,14 @@ function HomeInner() {
         {/* ─── Single-city mode: top-level city + nights ─── */}
         {!isMultiCity && (
           <>
-            <div className="card-premium rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: "50ms" }}>
+            <div className="card-premium rounded-2xl p-5">
               <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
                 Where are you going?
               </label>
               <CityInput value={city} onChange={setCity} autoFocus />
             </div>
 
-            <div className="card-premium rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+            <div className="card-premium rounded-2xl p-5">
               <label htmlFor="start-date" className="mb-2 block text-sm font-medium text-[var(--muted)]">
                 When?
               </label>
@@ -282,7 +278,7 @@ function HomeInner() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+            <div className="grid grid-cols-2 gap-4">
               <div className="card-premium rounded-2xl p-5">
                 <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
                   Nights
@@ -362,14 +358,14 @@ function HomeInner() {
           + Add another city
         </button>
 
-        <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+        <div>
           <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
             Trip style
           </label>
           <StylePicker value={style} onChange={setStyle} />
         </div>
 
-        <div className="animate-fade-in-up" style={{ animationDelay: "250ms" }}>
+        <div>
           <button
             type="submit"
             disabled={!canSubmit}

@@ -43,9 +43,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <ToastProvider>
           <NavBar />
-          <div className="animate-page-fade-in">
-            {children}
-          </div>
+          {children}
           <BottomNav />
         </ToastProvider>
       </body>

@@ -93,6 +93,12 @@ function legDateRange(
 
 type LegInput = { city: string; nights: number; style?: Style };
 
+function addDaysISO(iso: string, days: number): string {
+  const d = new Date(iso + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 // ─── Component ────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -118,12 +124,10 @@ function HomeInner() {
     return Number.isNaN(t) ? 2 : Math.max(1, Math.min(8, t));
   });
   const [style, setStyle] = useState<Style>("comfort");
-  // Avoid hydration mismatch: defaultStartDate() uses new Date() which differs
-  // between server and client. Initialize empty, then set after mount.
   const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [origin, setOrigin] = useState("nyc");
   const [mounted, setMounted] = useState(false);
-  // Today's date string for the date input min attribute (also deferred to avoid mismatch)
   const [todayStr, setTodayStr] = useState("");
 
   // Multi-city legs state.
@@ -132,14 +136,43 @@ function HomeInner() {
   const [showProfile, setShowProfile] = useState(false);
   const [profileExists, setProfileExists] = useState(true); // assume true to avoid flash
 
-  // Auto-detect origin from timezone + set date-dependent values on mount
+  // Auto-detect origin + set default dates on mount
   useEffect(() => {
     setMounted(true);
     setOrigin(detectOriginFromTimezone());
-    setStartDate(defaultStartDate());
+    const start = defaultStartDate();
+    setStartDate(start);
+    setEndDate(addDaysISO(start, 5)); // default 5 nights
     setTodayStr(new Date().toISOString().slice(0, 10));
     setProfileExists(checkHasProfile());
   }, []);
+
+  // Compute nights from the two dates
+  const computedNights = (() => {
+    if (!startDate || !endDate) return nights;
+    const s = new Date(startDate + "T00:00:00Z");
+    const e = new Date(endDate + "T00:00:00Z");
+    const diff = Math.round((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? diff : 1;
+  })();
+
+  // Keep nights in sync with computed value
+  useEffect(() => {
+    if (computedNights !== nights) setNights(computedNights);
+  }, [computedNights]);
+
+  // When start date changes, push end date forward to maintain nights
+  function handleStartDateChange(newStart: string) {
+    setStartDate(newStart);
+    if (newStart) {
+      setEndDate(addDaysISO(newStart, nights));
+    }
+  }
+
+  // When end date changes, just let computedNights recalculate
+  function handleEndDateChange(newEnd: string) {
+    setEndDate(newEnd);
+  }
 
   const mainRef = useRef<HTMLElement>(null);
 
@@ -265,32 +298,50 @@ function HomeInner() {
             </div>
 
             <div className="card-premium rounded-2xl p-5">
-              <label htmlFor="start-date" className="mb-2 block text-sm font-medium text-[var(--muted)]">
+              <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
                 When?
               </label>
-              <input
-                id="start-date"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                min={todayStr || undefined}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-base text-[var(--fg)] placeholder:text-[var(--muted)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
-              />
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  <label htmlFor="start-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    From
+                  </label>
+                  <input
+                    id="start-date"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => handleStartDateChange(e.target.value)}
+                    min={todayStr || undefined}
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
+                  />
+                </div>
+                <span className="mt-5 text-[var(--muted)]">→</span>
+                <div className="flex-1">
+                  <label htmlFor="end-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    To
+                  </label>
+                  <input
+                    id="end-date"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => handleEndDateChange(e.target.value)}
+                    min={startDate || todayStr || undefined}
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
+                  />
+                </div>
+              </div>
+              {startDate && endDate && computedNights > 0 && (
+                <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
+                  {computedNights} night{computedNights !== 1 ? "s" : ""}
+                </p>
+              )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="card-premium rounded-2xl p-5">
-                <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                  Nights
-                </label>
-                <NightsStepper value={nights} onChange={setNights} />
-              </div>
-              <div className="card-premium rounded-2xl p-5">
-                <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                  Travelers
-                </label>
-                <TravelersStepper value={travelers} onChange={setTravelers} />
-              </div>
+            <div className="card-premium rounded-2xl p-5">
+              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                Travelers
+              </label>
+              <TravelersStepper value={travelers} onChange={setTravelers} />
             </div>
           </>
         )}
@@ -299,36 +350,43 @@ function HomeInner() {
         {isMultiCity && (
           <>
             <div className="card-premium rounded-2xl p-5">
-              <label htmlFor="start-date-mc" className="mb-2 block text-sm font-medium text-[var(--muted)]">
+              <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
                 When does your trip start?
               </label>
-              <input
-                id="start-date-mc"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                min={todayStr || undefined}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-base text-[var(--fg)] placeholder:text-[var(--muted)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="card-premium rounded-2xl p-5">
-                <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                  Travelers
-                </label>
-                <TravelersStepper value={travelers} onChange={setTravelers} />
-              </div>
-              <div className="card-premium rounded-2xl p-5">
-                <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                  Total nights
-                </label>
-                <div className="flex items-center justify-center">
-                  <div className="text-2xl font-bold tabular-nums text-[var(--fg)]" aria-live="polite">
-                    {legs.reduce((s, l) => s + l.nights, 0)}
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  <label htmlFor="start-date-mc" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    Depart
+                  </label>
+                  <input
+                    id="start-date-mc"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => handleStartDateChange(e.target.value)}
+                    min={todayStr || undefined}
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
+                  />
+                </div>
+                <span className="mt-5 text-[var(--muted)]">→</span>
+                <div className="flex-1">
+                  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    Return
+                  </label>
+                  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2.5 text-sm text-[var(--muted)] tabular-nums">
+                    {startDate ? addDaysISO(startDate, legs.reduce((s, l) => s + l.nights, 0)) : "—"}
                   </div>
                 </div>
               </div>
+              <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
+                {legs.reduce((s, l) => s + l.nights, 0)} nights total across {legs.length} cities
+              </p>
+            </div>
+
+            <div className="card-premium rounded-2xl p-5">
+              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                Travelers
+              </label>
+              <TravelersStepper value={travelers} onChange={setTravelers} />
             </div>
 
             <div className="space-y-4">

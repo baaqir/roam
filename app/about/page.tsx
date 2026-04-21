@@ -4,9 +4,9 @@ import Link from "next/link";
 
 /* ───── tiny helpers ──────────────────────────────────────────────── */
 
-function GoldBadge({ n }: { n: number }) {
+function StepBadge({ n }: { n: number }) {
   return (
-    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-600)] text-sm font-bold text-white shadow-sm">
+    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--accent)] text-sm font-bold text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>
       {n}
     </span>
   );
@@ -14,7 +14,7 @@ function GoldBadge({ n }: { n: number }) {
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
+    <h2 className="text-lg font-bold text-[var(--fg)] mb-6">
       {children}
     </h2>
   );
@@ -32,17 +32,17 @@ function Kbd({ children }: { children: React.ReactNode }) {
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12 space-y-12">
+    <main className="mx-auto max-w-3xl px-6 py-16 space-y-16">
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="animate-fade-in-up text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-gradient-gold">
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--fg)]">
           About Roam
         </h1>
-        <p className="mt-3 text-sm text-[var(--fg-secondary)] leading-relaxed max-w-lg mx-auto">
+        <p className="mt-4 text-sm italic text-[var(--fg-secondary)] leading-relaxed max-w-lg mx-auto">
           Plan trips to any city in the world with personalized itineraries,
           cost estimates, and day-by-day plans.
         </p>
-        <span className="mt-3 inline-block chip-silver text-[10px] uppercase tracking-wider font-semibold">
+        <span className="mt-3 inline-block chip-muted text-[10px] uppercase tracking-wider font-semibold">
           v1.0
         </span>
       </section>
@@ -52,8 +52,8 @@ export default function AboutPage() {
         <SectionHeading>How it works</SectionHeading>
         <div className="stagger-children space-y-4">
           {/* Step 1 */}
-          <div className="card-premium rounded-2xl p-5 flex gap-4 items-start">
-            <GoldBadge n={1} />
+          <div className="card-editorial rounded-2xl p-5 flex gap-4 items-start">
+            <StepBadge n={1} />
             <div>
               <h3 className="text-lg font-bold text-[var(--fg)]">
                 Choose your destination
@@ -67,8 +67,8 @@ export default function AboutPage() {
           </div>
 
           {/* Step 2 */}
-          <div className="card-premium rounded-2xl p-5 flex gap-4 items-start">
-            <GoldBadge n={2} />
+          <div className="card-editorial rounded-2xl p-5 flex gap-4 items-start">
+            <StepBadge n={2} />
             <div>
               <h3 className="text-lg font-bold text-[var(--fg)]">
                 Set your preferences
@@ -82,8 +82,8 @@ export default function AboutPage() {
           </div>
 
           {/* Step 3 */}
-          <div className="card-premium rounded-2xl p-5 flex gap-4 items-start">
-            <GoldBadge n={3} />
+          <div className="card-editorial rounded-2xl p-5 flex gap-4 items-start">
+            <StepBadge n={3} />
             <div>
               <h3 className="text-lg font-bold text-[var(--fg)]">
                 Get your plan
@@ -120,7 +120,7 @@ export default function AboutPage() {
       {/* ── Data sources ─────────────────────────────── */}
       <section className="animate-fade-in-up">
         <SectionHeading>Where does the data come from?</SectionHeading>
-        <div className="card-premium rounded-2xl p-5 space-y-3">
+        <div className="card-editorial rounded-2xl p-5 space-y-3">
           <p className="text-sm text-[var(--fg-secondary)] leading-relaxed mb-4">
             Roam is built on free, open APIs. No hidden data brokers, no
             tracking pixels &mdash; just transparent sources you can verify
@@ -142,7 +142,7 @@ export default function AboutPage() {
       {/* ── Accuracy ─────────────────────────────────── */}
       <section className="animate-fade-in-up">
         <SectionHeading>How accurate are the estimates?</SectionHeading>
-        <div className="card-premium rounded-2xl p-5 space-y-4">
+        <div className="card-editorial rounded-2xl p-5 space-y-4">
           <p className="text-sm text-[var(--fg-secondary)] leading-relaxed">
             We believe in transparency. Here&rsquo;s what to expect:
           </p>
@@ -178,7 +178,7 @@ export default function AboutPage() {
       {/* ── Keyboard shortcuts ───────────────────────── */}
       <section className="animate-fade-in-up">
         <SectionHeading>Keyboard shortcuts</SectionHeading>
-        <div className="card-premium rounded-2xl p-5">
+        <div className="card-editorial rounded-2xl p-5">
           <div className="space-y-3">
             <ShortcutRow keys={["Cmd", "Enter"]} action="Submit form" />
             <ShortcutRow keys={["Cmd", "S"]} action="Save trip" />
@@ -194,7 +194,7 @@ export default function AboutPage() {
       {/* ── Tips ─────────────────────────────────────── */}
       <section className="animate-fade-in-up">
         <SectionHeading>Tips for best results</SectionHeading>
-        <div className="card-premium rounded-2xl p-5 space-y-3">
+        <div className="card-editorial rounded-2xl p-5 space-y-3">
           <Tip text="Set your travel dates — seasonality affects flight and lodging prices." />
           <Tip text="Set up your profile — personalized itineraries are much better than generic ones." />
           <Tip text="Use Comfort style for realistic mid-range budgets." />
@@ -206,7 +206,7 @@ export default function AboutPage() {
       {/* ── Built with ───────────────────────────────── */}
       <section className="animate-fade-in-up">
         <SectionHeading>Built with</SectionHeading>
-        <div className="card-premium rounded-2xl p-5 space-y-2 text-sm text-[var(--fg-secondary)]">
+        <div className="card-editorial rounded-2xl p-5 space-y-2 text-sm text-[var(--fg-secondary)]">
           <p>Next.js 15 + TypeScript + Tailwind CSS</p>
           <p>No database &mdash; your data stays in your browser.</p>
           <p>
@@ -227,7 +227,7 @@ export default function AboutPage() {
       <div className="animate-fade-in-up text-center pb-4">
         <Link
           href="/"
-          className="btn-gold inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold"
+          className="btn-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold"
         >
           Start planning a trip
         </Link>
@@ -248,10 +248,10 @@ function FeatureCard({
   desc: string;
 }) {
   return (
-    <div className="card-premium rounded-2xl p-4 flex flex-col gap-1.5">
+    <div className="card-editorial rounded-2xl p-5 flex flex-col gap-1.5">
       <span className="text-xl" dangerouslySetInnerHTML={{ __html: emoji }} />
       <span className="text-sm font-bold text-[var(--fg)]">{title}</span>
-      <span className="text-xs text-[var(--muted)] leading-relaxed" dangerouslySetInnerHTML={{ __html: desc }} />
+      <span className="text-xs italic text-[var(--muted)] leading-relaxed" dangerouslySetInnerHTML={{ __html: desc }} />
     </div>
   );
 }
@@ -286,7 +286,7 @@ function AccuracyRow({
         <p className="text-xs text-[var(--muted)] truncate">{examples}</p>
       </div>
       <span
-        className="shrink-0 chip-gold text-[10px] uppercase tracking-wider font-semibold"
+        className="shrink-0 chip-accent text-[10px] uppercase tracking-wider font-semibold"
         dangerouslySetInnerHTML={{ __html: range }}
       />
     </div>

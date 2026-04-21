@@ -61,7 +61,7 @@ export function PackingSuggestions({ plan }: { plan: TripPlan }) {
     <details
       open={open}
       onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}
-      className="card-premium rounded-2xl p-6"
+      className="card-editorial rounded-2xl p-6"
     >
       <summary className="cursor-pointer text-sm font-semibold text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-200">
         Packing suggestions ({checkedCount}/{totalItems} packed)
@@ -115,7 +115,7 @@ function PackingRow({
         type="checkbox"
         checked={checked}
         onChange={() => onToggle(itemKey)}
-        className="mt-1 h-4 w-4 rounded border-[var(--border)] text-[var(--gold-400)] accent-[var(--gold-400)]"
+        className="mt-1 h-4 w-4 rounded border-[var(--border)] text-[var(--accent)] accent-[var(--accent)]"
       />
       <div className="flex-1">
         <span

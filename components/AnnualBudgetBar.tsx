@@ -16,12 +16,12 @@ export function AnnualBudgetBar({
   const over = hasBudget && spent > budget!;
 
   return (
-    <div className="card-premium rounded-2xl p-6">
+    <div className="card-editorial rounded-2xl p-8">
       <div className="flex items-baseline justify-between">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+          <h2 className="text-lg font-bold text-[var(--fg)]">
             {new Date().getFullYear()} Travel Budget
-          </div>
+          </h2>
           <div className="mt-1 text-3xl font-bold tracking-tight text-[var(--fg)]">
             <AnimatedNumber value={spent} prefix="$" />
           </div>
@@ -51,7 +51,7 @@ export function AnnualBudgetBar({
             style={{
               width: `${pct}%`,
               ...(!over && pct <= 80
-                ? { background: "linear-gradient(90deg, var(--gold-400), var(--gold-500))" }
+                ? { background: "var(--terracotta)" }
                 : {}),
             }}
           />

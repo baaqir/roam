@@ -275,29 +275,29 @@ function HomeInner() {
   useKeyboardShortcuts(shortcuts);
 
   return (
-    <main ref={mainRef} className="mx-auto max-w-xl px-6 py-8 pb-16 animate-fade-in-up">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gradient-gold">
+    <main ref={mainRef} className="mx-auto max-w-xl px-6 py-12 pb-16 animate-fade-in-up">
+      <div className="text-center mb-12">
+        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight italic text-[var(--fg)]">
           Where to next?
         </h1>
-        <p className="mt-4 text-[var(--muted)] text-base leading-relaxed">
+        <p className="mt-5 text-[var(--muted)] text-base leading-relaxed italic">
           Type a city, set your style, and get a complete trip plan with
           budget and day-by-day itinerary.
         </p>
       </div>
 
-      <form onSubmit={submit} className="space-y-6">
+      <form onSubmit={submit} className="space-y-8">
         {/* ─── Single-city mode: top-level city + nights ─── */}
         {!isMultiCity && (
           <>
-            <div className="card-premium rounded-2xl p-5">
+            <div className="card-editorial rounded-2xl p-6">
               <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
                 Where are you going?
               </label>
               <CityInput value={city} onChange={setCity} autoFocus />
             </div>
 
-            <div className="card-premium rounded-2xl p-5">
+            <div className="card-editorial rounded-2xl p-6">
               <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
                 When?
               </label>
@@ -312,7 +312,7 @@ function HomeInner() {
                     value={startDate}
                     onChange={(e) => handleStartDateChange(e.target.value)}
                     min={todayStr || undefined}
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
                   />
                 </div>
                 <span className="mt-5 text-[var(--muted)]">→</span>
@@ -326,7 +326,7 @@ function HomeInner() {
                     value={endDate}
                     onChange={(e) => handleEndDateChange(e.target.value)}
                     min={startDate || todayStr || undefined}
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
                   />
                 </div>
               </div>
@@ -337,7 +337,7 @@ function HomeInner() {
               )}
             </div>
 
-            <div className="card-premium rounded-2xl p-5">
+            <div className="card-editorial rounded-2xl p-6">
               <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
                 Travelers
               </label>
@@ -349,7 +349,7 @@ function HomeInner() {
         {/* ─── Multi-city mode: leg cards ─── */}
         {isMultiCity && (
           <>
-            <div className="card-premium rounded-2xl p-5">
+            <div className="card-editorial rounded-2xl p-6">
               <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
                 When does your trip start?
               </label>
@@ -364,7 +364,7 @@ function HomeInner() {
                     value={startDate}
                     onChange={(e) => handleStartDateChange(e.target.value)}
                     min={todayStr || undefined}
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--gold-300)]"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
                   />
                 </div>
                 <span className="mt-5 text-[var(--muted)]">→</span>
@@ -382,7 +382,7 @@ function HomeInner() {
               </p>
             </div>
 
-            <div className="card-premium rounded-2xl p-5">
+            <div className="card-editorial rounded-2xl p-6">
               <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
                 Travelers
               </label>
@@ -411,7 +411,7 @@ function HomeInner() {
         <button
           type="button"
           onClick={handleAddCity}
-          className="w-full border border-dashed border-[var(--border)] rounded-2xl p-4 text-center text-sm font-medium text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--gold-300)] transition-all duration-200"
+          className="w-full border border-dashed border-[var(--border)] rounded-2xl p-5 text-center text-sm font-medium text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200"
         >
           + Add another city
         </button>
@@ -427,7 +427,7 @@ function HomeInner() {
           <button
             type="submit"
             disabled={!canSubmit}
-            className={`btn-gold w-full rounded-xl px-6 py-4 text-lg ${canSubmit ? "btn-gold-ready" : ""}`}
+            className="btn-primary w-full rounded-xl px-6 py-4 text-lg"
           >
             {isMultiCity ? "Plan my multi-city trip" : "Plan my trip"} &rarr;
           </button>
@@ -447,10 +447,10 @@ function HomeInner() {
           <button
             type="button"
             onClick={() => setShowProfile(true)}
-            className="w-full rounded-2xl border-l-[3px] border-l-[var(--gold-400)] bg-[var(--surface)] p-5 text-left shadow-sm transition-all duration-200 hover:shadow-md"
+            className="w-full rounded-2xl border-l-[3px] border-l-[var(--accent)] bg-[var(--surface)] p-6 text-left shadow-sm transition-all duration-200 hover:shadow-md"
           >
             <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-500)] text-lg text-white">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)] text-lg text-white">
                 ✨
               </div>
               <div>
@@ -505,7 +505,7 @@ function NightsStepper({
         type="button"
         onClick={() => handleChange(Math.max(1, value - 1))}
         aria-label="Decrease nights"
-        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--accent)] focus-ring transition-all duration-200"
       >
         -
       </button>
@@ -519,7 +519,7 @@ function NightsStepper({
         type="button"
         onClick={() => handleChange(Math.min(30, value + 1))}
         aria-label="Increase nights"
-        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--accent)] focus-ring transition-all duration-200"
       >
         +
       </button>
@@ -548,7 +548,7 @@ function TravelersStepper({
         type="button"
         onClick={() => handleChange((n) => Math.max(1, n - 1))}
         aria-label="Decrease travelers"
-        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--accent)] focus-ring transition-all duration-200"
       >
         -
       </button>
@@ -562,7 +562,7 @@ function TravelersStepper({
         type="button"
         onClick={() => handleChange((n) => Math.min(8, n + 1))}
         aria-label="Increase travelers"
-        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--gold-300)] focus-ring transition-all duration-200"
+        className="flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-lg font-bold text-[var(--fg)] hover:bg-[var(--surface-hover)] hover:border-[var(--accent)] focus-ring transition-all duration-200"
       >
         +
       </button>
@@ -595,7 +595,7 @@ function LegCard({
   const dateRange = startDate ? legDateRange(startDate, allLegs, index) : "";
 
   return (
-    <div className="card-premium rounded-2xl p-5 relative animate-fade-in">
+    <div className="card-editorial rounded-2xl p-6 relative animate-fade-in">
       {/* Remove button */}
       <button
         type="button"
@@ -610,7 +610,7 @@ function LegCard({
 
       {/* Gold numbered badge + date range */}
       <div className="flex items-center gap-2 mb-3">
-        <span className="inline-flex h-6 items-center rounded-lg bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-500)] px-2.5 text-[11px] font-semibold uppercase tracking-wider text-white">
+        <span className="inline-flex h-6 items-center rounded-lg bg-[var(--accent)] px-2.5 text-[11px] font-semibold uppercase tracking-wider text-white">
           Stop {index + 1}
         </span>
         {dateRange && (

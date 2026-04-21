@@ -72,13 +72,13 @@ export function ExploreActivities({
   }, [filtered, checkScroll]);
 
   return (
-    <div className="card-premium rounded-2xl p-6 no-print">
-      <div className="flex items-baseline justify-between gap-3 mb-5">
+    <div className="card-editorial rounded-2xl p-8 no-print">
+      <div className="flex items-baseline justify-between gap-3 mb-6">
         <div>
-          <h2 className="text-lg font-bold text-[var(--fg)]">
+          <h2 className="text-xl font-bold text-[var(--fg)]">
             Things to Explore
           </h2>
-          <p className="text-sm text-[var(--muted)]">
+          <p className="text-sm italic text-[var(--muted)]">
             {unplacedCount} activities available
           </p>
         </div>
@@ -100,8 +100,8 @@ export function ExploreActivities({
             aria-pressed={!tagFilter}
             className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
               !tagFilter
-                ? "bg-[var(--gold-400)] text-white shadow-sm"
-                : "bg-[var(--surface-hover)] text-[var(--muted)] hover:text-[var(--fg)] border border-[var(--border-subtle)]"
+                ? "bg-[var(--accent)] text-white shadow-sm"
+                : "bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--fg)] border border-[var(--border)]"
             }`}
           >
             All
@@ -113,8 +113,8 @@ export function ExploreActivities({
               aria-pressed={tag === tagFilter}
               className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-all duration-200 ${
                 tag === tagFilter
-                  ? "bg-[var(--gold-400)] text-white shadow-sm"
-                  : "bg-[var(--surface-hover)] text-[var(--muted)] hover:text-[var(--fg)] border border-[var(--border-subtle)]"
+                  ? "bg-[var(--accent)] text-white shadow-sm"
+                  : "bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--fg)] border border-[var(--border)]"
               }`}
             >
               {tag}

@@ -64,7 +64,7 @@ export function DayNav({ days }: Props) {
               onClick={() => scrollToDay(day.dayNumber)}
               className={`flex-shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                 isActive
-                  ? "chip-gold"
+                  ? "chip-accent"
                   : "text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)]"
               }`}
               aria-label={`Scroll to Day ${day.dayNumber}`}

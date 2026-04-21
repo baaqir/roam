@@ -37,16 +37,11 @@ export function NavBar() {
 
   return (
     <>
-      {/* Premium gold accent stripe */}
-      <div className="sticky top-0 z-50" aria-hidden="true" style={{ height: "1px", background: "linear-gradient(90deg, transparent 0%, var(--gold-400) 30%, var(--gold-500) 50%, var(--gold-400) 70%, transparent 100%)" }} />
-      <nav className="sticky top-[1px] z-50 border-b border-[var(--border-subtle)] glass" aria-label="Main navigation">
+      <nav className="sticky top-0 z-50 border-b border-[var(--border-subtle)] glass" aria-label="Main navigation">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-3">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-600)] text-sm font-bold text-white shadow-sm transition-transform duration-200 ease-out group-hover:scale-105">
-                R
-              </div>
-              <span className="text-base font-bold tracking-tight text-[var(--fg)]">
+              <span className="font-[var(--font-playfair)] text-xl italic font-bold tracking-tight text-[var(--fg)] transition-colors duration-200 group-hover:text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>
                 Roam
               </span>
             </Link>
@@ -66,7 +61,7 @@ export function NavBar() {
                 <span className="text-base">{profileEmoji}</span>
               ) : (
                 <>
-                  <span className="text-xs">Preferences</span>
+                  <span className="text-xs italic">Preferences</span>
                   <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--accent)]" />
                 </>
               )}

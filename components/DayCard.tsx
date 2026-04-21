@@ -66,7 +66,9 @@ export function DayCard({ day, travelers, totalDays, onRemoveActivity, onActivit
   const isFullDay = day.label === "Full Day";
 
   return (
-    <div className={`card-premium card-premium-hover rounded-2xl p-5 ${isFullDay ? "border-l-[2px] border-l-[var(--gold-400)]" : ""}`} id={`day-${day.dayNumber}`}>
+    <div className={`card-editorial card-editorial-hover rounded-2xl p-6`} id={`day-${day.dayNumber}`}>
+      {/* Thin top rule for editorial separation */}
+      <hr className="divider-gradient mb-4 -mt-1" />
       {isOverpacked && (
         <div className="mb-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-700 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 animate-fade-in">
           This day has ~{Math.round(totalActivityHours)}h of activities — consider spreading some to another day
@@ -90,13 +92,13 @@ export function DayCard({ day, travelers, totalDays, onRemoveActivity, onActivit
           <span className="text-xs text-[var(--muted)] sm:hidden" aria-hidden="true">
             {collapsed ? "\u25B8" : "\u25BE"}
           </span>
-          <span className="text-xl font-extrabold text-[var(--fg)]">
+          <span className="text-xl font-bold text-[var(--fg)]" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>
             Day {day.dayNumber}
           </span>
           <span className="text-sm text-[var(--muted)]">
             {day.dayOfWeek} {formatDate(day.date)}
           </span>
-          <span className="chip-gold">
+          <span className="text-xs italic text-[var(--accent)]">
             {day.label}
           </span>
           {weather && tempStr && (

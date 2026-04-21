@@ -25,7 +25,7 @@ export function ThemeToggle() {
       onClick={toggle}
       title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-      className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] glass text-[var(--fg)] hover:border-[var(--gold-400)] focus-ring transition-all duration-200 text-sm"
+      className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] glass text-[var(--fg)] hover:border-[var(--accent)] focus-ring transition-all duration-200 text-sm"
     >
       <span className="transition-transform duration-200" style={{ display: "inline-block", transform: theme === "dark" ? "rotate(-15deg)" : "rotate(0deg)" }}>
         {theme === "dark" ? "\u2600" : "\u263E"}

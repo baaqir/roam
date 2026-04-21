@@ -45,9 +45,9 @@ export function ActivityCard({
   const { fmt } = useCurrency();
   return (
     <div
-      className={`card-premium card-premium-hover rounded-xl p-4 transition-all duration-200 ${
+      className={`card-editorial card-editorial-hover rounded-xl p-5 transition-all duration-200 ${
         inItinerary
-          ? "opacity-60 border-[var(--gold-200)]"
+          ? "opacity-60 border-[var(--border)]"
           : ""
       }`}
     >
@@ -57,21 +57,21 @@ export function ActivityCard({
             {onActivityClick ? (
               <button
                 onClick={onActivityClick}
-                className="font-semibold text-[var(--fg)] hover:text-[var(--accent)] transition-colors duration-200 text-left cursor-pointer"
+                className="font-semibold text-[var(--fg)] hover:text-[var(--accent)] transition-colors duration-200 text-left cursor-pointer" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}
               >
                 {activity.name}
               </button>
             ) : (
-              <span className="font-semibold text-[var(--fg)]">{activity.name}</span>
+              <span className="font-semibold text-[var(--fg)]" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>{activity.name}</span>
             )}
             {inItinerary && (
-              <span className="chip-gold">
+              <span className="chip-accent">
                 in plan
               </span>
             )}
           </div>
           {activity.description && (
-            <p className="mt-1 text-sm text-[var(--muted)] leading-relaxed line-clamp-2">
+            <p className="mt-1 text-sm italic text-[var(--muted)] leading-relaxed line-clamp-2">
               {activity.description}
             </p>
           )}
@@ -140,7 +140,7 @@ function DayPicker({
         e.target.value = "";
       }}
       aria-label="Add to day"
-      className="rounded-lg border border-[var(--gold-400)] bg-[var(--accent-light)] px-2.5 py-1 text-xs font-medium text-[var(--accent)] cursor-pointer focus-ring transition-all duration-200"
+      className="rounded-lg border border-[var(--accent)] bg-[var(--accent-light)] px-2.5 py-1 text-xs font-medium text-[var(--accent)] cursor-pointer focus-ring transition-all duration-200"
     >
       <option value="" disabled>
         + Add to...

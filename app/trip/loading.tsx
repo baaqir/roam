@@ -22,23 +22,20 @@ export default function TripLoading() {
   return (
     <main className="mx-auto max-w-2xl px-6 py-24">
       <div className="text-center animate-fade-in-up">
-        {/* Logo with shimmer background */}
+        {/* Clean serif R logo */}
         <div className="relative mx-auto mb-8 h-16 w-16">
           <div
-            className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-600)] animate-logo-shimmer blur-lg"
+            className="absolute inset-0 rounded-full bg-[var(--accent)] animate-logo-shimmer blur-lg opacity-30"
             aria-hidden="true"
           />
-          <div
-            className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--gold-400)] to-[var(--gold-600)]"
-            style={{ animation: "spin-slow 3s linear infinite" }}
-          >
-            <span className="text-2xl text-white font-bold">R</span>
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--accent)]">
+            <span className="text-2xl text-[var(--accent)] font-bold" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>R</span>
           </div>
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-[var(--fg)]">
           Planning your trip...
         </h1>
-        <p className="mt-2 text-[var(--muted)]">
+        <p className="mt-2 italic text-[var(--muted)]">
           Crafting the perfect itinerary
         </p>
         <div className="mt-10 flex flex-col items-center">
@@ -55,8 +52,8 @@ export default function TripLoading() {
                     className="w-0.5 h-4 transition-colors duration-300"
                     style={{
                       backgroundColor: isCompleted || isActive
-                        ? "var(--gold-400)"
-                        : "var(--silver-300)",
+                        ? "var(--accent)"
+                        : "var(--brown-200)",
                     }}
                   />
                 )}
@@ -72,7 +69,7 @@ export default function TripLoading() {
                   {isCompleted && (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[var(--gold-400)]"
+                      className="h-4 w-4 text-[var(--accent)]"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -84,10 +81,10 @@ export default function TripLoading() {
                     </svg>
                   )}
                   {isActive && (
-                    <div className="h-2.5 w-2.5 rounded-full bg-[var(--gold-400)] animate-gold-pulse" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-[var(--accent)] animate-gold-pulse" />
                   )}
                   {isPending && (
-                    <div className="h-2 w-2 rounded-full bg-[var(--silver-300)]" />
+                    <div className="h-2 w-2 rounded-full bg-[var(--brown-200)]" />
                   )}
                   <span className={isActive ? "font-medium" : ""}>{label}</span>
                 </div>

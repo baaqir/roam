@@ -11,7 +11,7 @@ export function PreDepartureChecklist({ plan }: { plan: TripPlan }) {
     <details
       open={open}
       onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}
-      className="card-premium rounded-2xl p-6"
+      className="card-editorial rounded-2xl p-6"
     >
       <summary className="cursor-pointer text-sm font-semibold text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-200">
         Pre-departure checklist ({plan.checklist.length} items)
@@ -33,15 +33,15 @@ function ChecklistRow({ item }: { item: ChecklistItem }) {
     item.priority === "must"
       ? "bg-red-500"
       : item.priority === "should"
-        ? "bg-[var(--gold-400)]"
-        : "bg-[var(--silver-300)]";
+        ? "bg-[var(--accent)]"
+        : "bg-[var(--brown-200)]";
   return (
     <label className="flex cursor-pointer items-start gap-3 rounded-xl px-3 py-2 hover:bg-[var(--surface-hover)] transition-colors duration-200">
       <input
         type="checkbox"
         checked={checked}
         onChange={() => setChecked(!checked)}
-        className="mt-1 h-4 w-4 rounded border-[var(--border)] text-[var(--gold-400)] accent-[var(--gold-400)]"
+        className="mt-1 h-4 w-4 rounded border-[var(--border)] text-[var(--accent)] accent-[var(--accent)]"
       />
       <div className="flex-1">
         <div className="flex items-center gap-2">

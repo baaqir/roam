@@ -35,7 +35,7 @@ export function DayItem({ item, travelers, onRemove, onActivityClick, onMove, to
   return (
     <div className="relative flex items-start gap-3 py-3 group">
       {isHighlighted && (
-        <div className="absolute inset-0 rounded-lg bg-[var(--gold-400)]/10 animate-fade-in pointer-events-none" />
+        <div className="absolute inset-0 rounded-lg bg-[var(--accent)]/10 animate-fade-in pointer-events-none" />
       )}
       <span className="mt-0.5 text-xl leading-none" aria-hidden="true">{item.emoji}</span>
       <div className="flex-1 min-w-0">
@@ -113,7 +113,7 @@ export function DayItem({ item, travelers, onRemove, onActivityClick, onMove, to
           </div>
         </div>
         {item.description && (
-          <p className="mt-0.5 text-xs text-[var(--muted)] leading-relaxed">
+          <p className="mt-0.5 text-xs italic text-[var(--muted)] leading-relaxed">
             {item.description}
           </p>
         )}
@@ -122,7 +122,7 @@ export function DayItem({ item, travelers, onRemove, onActivityClick, onMove, to
             {item.durationHours != null && item.durationHours > 0 && (
               <span className="text-xs text-[var(--muted)]">~{item.durationHours}h</span>
             )}
-            {timingHint && <span className="chip-silver text-[10px]">{timingHint}</span>}
+            {timingHint && <span className="chip-muted text-[10px]">{timingHint}</span>}
           </div>
         )}
       </div>

@@ -57,7 +57,7 @@ export function TripNotes({ input }: { input: TripInput }) {
     <details
       open={open}
       onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}
-      className="card-premium rounded-2xl p-6"
+      className="card-editorial rounded-2xl p-6"
     >
       <summary className="cursor-pointer text-sm font-semibold text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-200">
         Trip Notes

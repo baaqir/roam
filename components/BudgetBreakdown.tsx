@@ -94,16 +94,16 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
   }, [multiPlan]);
 
   return (
-    <div className="card-premium rounded-2xl p-6">
-      <div className="mb-4 flex items-center gap-2">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+    <div className="card-editorial rounded-2xl p-8">
+      <div className="mb-5 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-[var(--fg)]">
           Budget Breakdown
         </h2>
         {assumptions && (
           <ConfidenceBadge level={confidenceLevel} />
         )}
       </div>
-      <hr className="divider-gradient mb-5" />
+      <hr className="divider-gradient mb-6" />
       <div className="space-y-4" role="list" aria-label="Budget categories">
         {rows.map((row) => {
           const expanded = expandedKey === row.key;
@@ -146,7 +146,7 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
                       className="h-full rounded-full transition-all duration-700 ease-out"
                       style={{
                         width: `${(row.pct / maxPct) * 100}%`,
-                        background: "linear-gradient(90deg, var(--gold-400), var(--gold-500))",
+                        background: "var(--terracotta)",
                       }}
                     />
                   </div>
@@ -156,7 +156,7 @@ export function BudgetBreakdown({ rows, multiPlan, bookingLinks, assumptions }: 
                 </span>
               </button>
               {expanded && (
-                <div className="mt-2 pl-8 text-xs text-[var(--muted)] animate-fade-in leading-relaxed space-y-1.5">
+                <div className="mt-2 pl-8 text-xs text-[var(--muted)] italic animate-fade-in leading-relaxed space-y-1.5">
                   {cityBreakdown && cityBreakdown.length > 1 ? (
                     <p>
                       {cityBreakdown

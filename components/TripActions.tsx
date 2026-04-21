@@ -93,8 +93,8 @@ const ActionButton = forwardRef<
       onClick={onClick}
       className={`rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 focus-ring ${
         primary
-          ? "btn-gold"
-          : "card-premium card-premium-hover border border-[var(--border)] text-[var(--fg)] hover:border-[var(--gold-300)]"
+          ? "btn-primary"
+          : "border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] hover:border-[var(--accent)] hover:shadow-sm"
       }`}
     >
       {children}

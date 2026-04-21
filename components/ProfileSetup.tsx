@@ -145,7 +145,7 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
       <div className="flex min-h-full items-start justify-center p-4 py-8 sm:py-12">
         <div
           ref={dialogRef}
-          className="card-premium rounded-2xl p-6 w-full max-w-lg animate-scale-in"
+          className="card-editorial rounded-2xl p-6 w-full max-w-lg animate-scale-in"
           role="dialog"
           aria-modal="true"
           aria-label="Travel preferences"
@@ -216,8 +216,8 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
                     onClick={() => toggleInterest(interest)}
                     className={`relative flex flex-col items-center gap-1.5 rounded-xl border p-3 text-center transition-all duration-200 ${
                       selected
-                        ? "border-[var(--gold-400)] bg-[var(--gold-50)] shadow-sm"
-                        : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--gold-300)] hover:bg-[var(--surface-hover)]"
+                        ? "border-[var(--accent)] bg-[var(--accent-light)] shadow-sm"
+                        : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)] hover:bg-[var(--surface-hover)]"
                     }`}
                   >
                     {selected && (
@@ -245,7 +245,7 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
                 type="button"
                 onClick={() => setStep(2)}
                 disabled={interests.length < 1}
-                className="btn-gold rounded-xl px-6 py-2.5 text-sm"
+                className="btn-primary rounded-xl px-6 py-2.5 text-sm"
               >
                 Next
               </button>
@@ -288,8 +288,8 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
                   onClick={() => setPace(opt.value)}
                   className={`w-full flex items-center gap-4 rounded-xl border p-4 text-left transition-all duration-200 ${
                     pace === opt.value
-                      ? "border-[var(--gold-400)] bg-[var(--gold-50)] shadow-sm"
-                      : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--gold-300)] hover:bg-[var(--surface-hover)]"
+                      ? "border-[var(--accent)] bg-[var(--accent-light)] shadow-sm"
+                      : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)] hover:bg-[var(--surface-hover)]"
                   }`}
                 >
                   <span className="text-2xl">{opt.emoji}</span>
@@ -312,14 +312,14 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--fg)] hover:border-[var(--gold-300)] transition-all duration-200"
+                className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--fg)] hover:border-[var(--accent)] transition-all duration-200"
               >
                 Back
               </button>
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="btn-gold rounded-xl px-6 py-2.5 text-sm"
+                className="btn-primary rounded-xl px-6 py-2.5 text-sm"
               >
                 Next
               </button>
@@ -350,7 +350,7 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
                 aria-checked={withKids}
                 onClick={() => setWithKids(!withKids)}
                 className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors duration-200 ${
-                  withKids ? "bg-[var(--accent)]" : "bg-[var(--silver-300)]"
+                  withKids ? "bg-[var(--accent)]" : "bg-[var(--brown-200)]"
                 }`}
               >
                 <span
@@ -376,8 +376,8 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
                       onClick={() => toggleDietary(opt.value)}
                       className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
                         selected
-                          ? "border-[var(--gold-400)] bg-[var(--gold-50)] text-[var(--accent)]"
-                          : "border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:border-[var(--gold-300)]"
+                          ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
+                          : "border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:border-[var(--accent)]"
                       }`}
                     >
                       {opt.label}
@@ -406,8 +406,8 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
                     onClick={() => setBudgetSensitivity(opt.value)}
                     className={`rounded-xl border p-3 text-center transition-all duration-200 ${
                       budgetSensitivity === opt.value
-                        ? "border-[var(--gold-400)] bg-[var(--gold-50)] shadow-sm"
-                        : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--gold-300)] hover:bg-[var(--surface-hover)]"
+                        ? "border-[var(--accent)] bg-[var(--accent-light)] shadow-sm"
+                        : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)] hover:bg-[var(--surface-hover)]"
                     }`}
                   >
                     <div
@@ -431,7 +431,7 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--fg)] hover:border-[var(--gold-300)] transition-all duration-200"
+                className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--fg)] hover:border-[var(--accent)] transition-all duration-200"
               >
                 Back
               </button>
@@ -439,7 +439,7 @@ export function ProfileSetup({ asSettings, onClose }: Props) {
                 type="button"
                 onClick={handleSave}
                 disabled={interests.length < 1}
-                className="btn-gold rounded-xl px-6 py-2.5 text-sm"
+                className="btn-primary rounded-xl px-6 py-2.5 text-sm"
               >
                 Save preferences
               </button>

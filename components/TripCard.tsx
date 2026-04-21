@@ -53,16 +53,16 @@ export function TripCard({ trip, onDelete }: Props) {
   }
 
   return (
-    <div className="card-premium card-premium-hover flex items-center gap-4 rounded-2xl p-5">
+    <div className="card-editorial card-editorial-hover flex items-center gap-4 rounded-2xl p-6">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <Link href={url} className="text-lg font-bold text-[var(--fg)] hover:text-[var(--accent)] transition-colors duration-200 truncate">
+          <Link href={url} className="text-lg font-bold text-[var(--fg)] hover:text-[var(--accent)] transition-colors duration-200 truncate" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>
             {displayName}
           </Link>
           <span className={
             trip.status === "upcoming"
-              ? "chip-gold"
-              : "chip-silver"
+              ? "chip-accent"
+              : "chip-muted"
           }>
             {trip.status}
           </span>

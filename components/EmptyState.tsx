@@ -16,7 +16,7 @@ function SuitcaseSvg() {
       height="64"
       viewBox="0 0 64 64"
       fill="none"
-      stroke="var(--gold-400)"
+      stroke="var(--accent)"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -39,7 +39,7 @@ function CompassSvg() {
       height="64"
       viewBox="0 0 64 64"
       fill="none"
-      stroke="var(--gold-400)"
+      stroke="var(--accent)"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -47,8 +47,8 @@ function CompassSvg() {
     >
       <circle cx="32" cy="32" r="24" />
       <circle cx="32" cy="32" r="2" />
-      <polygon points="28,20 24,40 32,34" strokeWidth="1.5" fill="var(--gold-400)" opacity="0.3" />
-      <polygon points="36,44 40,24 32,30" strokeWidth="1.5" fill="var(--gold-400)" opacity="0.15" />
+      <polygon points="28,20 24,40 32,34" strokeWidth="1.5" fill="var(--accent)" opacity="0.3" />
+      <polygon points="36,44 40,24 32,30" strokeWidth="1.5" fill="var(--accent)" opacity="0.15" />
       <line x1="32" y1="8" x2="32" y2="12" />
       <line x1="32" y1="52" x2="32" y2="56" />
       <line x1="8" y1="32" x2="12" y2="32" />
@@ -64,7 +64,7 @@ function GlobeSvg() {
       height="64"
       viewBox="0 0 64 64"
       fill="none"
-      stroke="var(--gold-400)"
+      stroke="var(--accent)"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

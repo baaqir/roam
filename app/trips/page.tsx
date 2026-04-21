@@ -52,11 +52,11 @@ export default function TripsPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-12 animate-fade-in-up">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gradient-gold">
+      <div className="mb-10">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--fg)]">
           My Trips
         </h1>
-        <p className="mt-1 text-[var(--muted)]">
+        <p className="mt-2 italic text-[var(--muted)]">
           Your travel year at a glance.
         </p>
       </div>
@@ -90,7 +90,7 @@ export default function TripsPage() {
             />
             <button
               onClick={saveBudget}
-              className="btn-gold rounded-lg px-3 py-1.5 text-sm"
+              className="btn-primary rounded-lg px-3 py-1.5 text-sm"
             >
               Save
             </button>
@@ -106,7 +106,7 @@ export default function TripsPage() {
 
       <div className="mt-8 space-y-3 stagger-children">
         {trips.length === 0 ? (
-          <div className="card-premium rounded-2xl border border-dashed border-[var(--border)] p-6">
+          <div className="card-editorial rounded-2xl border border-dashed border-[var(--border)] p-6">
             <EmptyState
               icon="suitcase"
               title="No trips saved yet"
@@ -124,7 +124,7 @@ export default function TripsPage() {
       <div className="mt-10 text-center">
         <Link
           href="/"
-          className="btn-gold inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base"
+          className="btn-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base"
         >
           + Plan a new trip
         </Link>

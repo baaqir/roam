@@ -96,14 +96,14 @@ export function ActivityModal({
     >
       <div
         ref={dialogRef}
-        className="card-premium p-6 w-full relative max-h-[85vh] overflow-y-auto sm:max-w-md sm:rounded-2xl sm:animate-scale-in sm:mx-auto rounded-t-2xl rounded-b-none animate-slide-up mt-auto sm:mt-0"
+        className="card-editorial p-6 w-full relative max-h-[85vh] overflow-y-auto sm:max-w-md sm:rounded-2xl sm:animate-scale-in sm:mx-auto rounded-t-2xl rounded-b-none animate-slide-up mt-auto sm:mt-0"
         role="dialog"
         aria-modal="true"
         aria-label={activity.name}
       >
         {/* Mobile drag handle */}
         <div className="sm:hidden flex justify-center pt-2 pb-1">
-          <div className="h-1 w-10 rounded-full bg-[var(--silver-300)]" />
+          <div className="h-1 w-10 rounded-full bg-[var(--brown-200)]" />
         </div>
 
         {/* Close button */}
@@ -126,7 +126,7 @@ export function ActivityModal({
         </button>
 
         {/* Heading */}
-        <h2 className="text-xl font-bold text-[var(--fg)] pr-8">
+        <h2 className="text-xl font-bold text-[var(--fg)] pr-8" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>
           {activity.name}
         </h2>
 
@@ -219,7 +219,7 @@ export function ActivityModal({
                       onAdd(selectedDay);
                       onClose();
                     }}
-                    className="btn-gold rounded-xl px-5 py-2.5 text-sm"
+                    className="btn-primary rounded-xl px-5 py-2.5 text-sm"
                   >
                     Add to Day {selectedDay}
                   </button>
@@ -232,14 +232,14 @@ export function ActivityModal({
               href={bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="card-premium card-premium-hover w-full rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-medium text-[var(--accent)] hover:border-[var(--gold-300)] transition-all duration-200 text-center inline-block"
+              className="card-editorial card-editorial-hover w-full rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-medium text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200 text-center inline-block"
             >
               Book this activity &rarr;
             </a>
           )}
           <button
             onClick={onClose}
-            className="w-full rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--muted)] hover:text-[var(--fg)] hover:border-[var(--gold-300)] transition-all duration-200"
+            className="w-full rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--muted)] hover:text-[var(--fg)] hover:border-[var(--accent)] transition-all duration-200"
           >
             Close
           </button>

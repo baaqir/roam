@@ -261,12 +261,12 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
                   e.preventDefault();
                   selectSuggestion(s.key, s.label);
                 }}
-                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--fg)] hover:bg-[var(--gold-50)] transition-colors duration-150"
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--fg)] hover:bg-[var(--accent-light)] transition-colors duration-150"
               >
                 <span>
                   <HighlightMatch text={s.label} query={query} />
                 </span>
-                <span className="chip-gold text-[9px]">curated</span>
+                <span className="chip-accent text-[9px]">curated</span>
               </button>
             </li>
           ))}
@@ -284,7 +284,7 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
                   e.preventDefault();
                   commit(text.trim());
                 }}
-                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--fg)] hover:bg-[var(--gold-50)] transition-colors duration-150"
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-[var(--fg)] hover:bg-[var(--accent-light)] transition-colors duration-150"
               >
                 <span>
                   Plan a trip to <strong>{text.trim()}</strong>

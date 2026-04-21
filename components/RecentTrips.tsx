@@ -21,7 +21,7 @@ export function RecentTrips() {
   return (
     <div className="mt-12">
       <div className="mb-3 flex items-baseline justify-between">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+        <h2 className="text-lg font-bold text-[var(--fg)]">
           Recent trips
         </h2>
         <Link
@@ -39,7 +39,7 @@ export function RecentTrips() {
             <li key={t.id}>
               <Link
                 href={url}
-                className="card-premium card-premium-hover flex items-baseline justify-between rounded-xl px-4 py-3"
+                className="card-editorial card-editorial-hover flex items-baseline justify-between rounded-xl px-4 py-3"
               >
                 <div>
                   <div className="font-medium text-[var(--accent)]">

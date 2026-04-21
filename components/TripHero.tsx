@@ -83,48 +83,42 @@ export function TripHero({ plan, multiPlan, heroImage, bookingLinks }: Props) {
 
   return (
     <div className="trip-hero text-center animate-fade-in-up">
-      {/* Destination hero image */}
+      {/* Destination hero image — magazine-style, tall, immersive */}
       {heroImage && (
-        <div className="relative -mx-6 -mt-6 mb-8 h-56 overflow-hidden rounded-2xl">
+        <div className="relative -mx-6 -mt-6 mb-10 h-72 sm:h-80 overflow-hidden rounded-2xl">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={heroImage}
             alt={cityNames[0]}
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-[var(--bg)]/60 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-6">
-            <h1 className="text-3xl font-bold tracking-tight text-[var(--fg)] drop-shadow-sm">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-8">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white drop-shadow-lg">
               {heroTitle}
             </h1>
-            <div className="mt-1 text-sm text-[var(--fg-secondary)]">
+            <div className="mt-2 text-sm italic text-white/80">
               Flying from {plan.originName.split("(")[0].trim()}
             </div>
           </div>
         </div>
       )}
 
-      {/* Fallback: gradient placeholder when no hero image */}
+      {/* Fallback: elegant serif title when no hero image */}
       {!heroImage && (
-        <div className="relative -mx-6 -mt-12 mb-8 h-48 overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--gold-100)] via-[var(--gold-50)] to-[var(--surface)]">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-6xl font-bold text-[var(--gold-300)] opacity-30 select-none">
-              {isMulti ? cityNames.join(" + ") : cityNames[0]}
-            </span>
+        <div className="mb-10 pt-4">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--fg)]">
+            {heroTitle}
+          </h1>
+          <div className="mt-2 text-sm italic text-[var(--muted)]">
+            Flying from {plan.originName.split("(")[0].trim()}
           </div>
-          <div className="absolute bottom-0 left-0 right-0 p-6">
-            <h1 className="text-3xl font-bold tracking-tight text-[var(--fg)] drop-shadow-sm">
-              {heroTitle}
-            </h1>
-            <div className="mt-1 text-sm text-[var(--fg-secondary)]">
-              Flying from {plan.originName.split("(")[0].trim()}
-            </div>
-          </div>
+          <hr className="divider-gradient mt-6" />
         </div>
       )}
 
-      <div className={`${heroImage ? "mt-2" : "mt-5"} flex items-baseline justify-center gap-3`}>
-        <span className="text-5xl font-bold text-[var(--fg)] hero-cost-hover transition-all duration-200">
+      <div className={`${heroImage ? "mt-2" : "mt-0"} flex items-baseline justify-center gap-3`}>
+        <span className="text-5xl font-bold text-[var(--fg)] hero-cost-hover transition-all duration-200" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>
           {showLocal ? (
             <span className="tabular-nums">{fmt(displayTotal)}</span>
           ) : (
@@ -145,9 +139,9 @@ export function TripHero({ plan, multiPlan, heroImage, bookingLinks }: Props) {
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-        <span className="chip-silver">{inputNights} nights</span>
-        <span className="chip-silver">{plan.input.travelers} traveler{plan.input.travelers > 1 ? "s" : ""}</span>
-        <span className="chip-gold capitalize">{plan.input.style}</span>
+        <span className="chip-muted">{inputNights} nights</span>
+        <span className="chip-muted">{plan.input.travelers} traveler{plan.input.travelers > 1 ? "s" : ""}</span>
+        <span className="chip-accent capitalize">{plan.input.style}</span>
       </div>
       {plan.input.profile && (
         <div className="mt-2 text-sm text-[var(--accent)]">
@@ -191,16 +185,16 @@ export function TripHero({ plan, multiPlan, heroImage, bookingLinks }: Props) {
       {/* Currency toggle + country info */}
       {ctx.country && (
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs text-[var(--muted)]">
-          <span className="chip-silver">{ctx.country.currencySymbol} {ctx.country.currencyCode}</span>
-          {ctx.country.languages[0] && <span className="chip-silver">{ctx.country.languages[0]}</span>}
+          <span className="chip-muted">{ctx.country.currencySymbol} {ctx.country.currencyCode}</span>
+          {ctx.country.languages[0] && <span className="chip-muted">{ctx.country.languages[0]}</span>}
           {ctx.country.plugTypes[0] !== "unknown" && (
-            <span className="chip-silver">Plug {ctx.country.plugTypes.join("/")}</span>
+            <span className="chip-muted">Plug {ctx.country.plugTypes.join("/")}</span>
           )}
-          {ctx.sun && <span className="chip-silver">{ctx.sun.sunrise}--{ctx.sun.sunset}</span>}
+          {ctx.sun && <span className="chip-muted">{ctx.sun.sunrise}--{ctx.sun.sunset}</span>}
           {ctx.usdToLocal != null && (
             <button
               onClick={toggle}
-              className="chip-silver cursor-pointer hover:border-[var(--gold-400)] transition-all duration-200"
+              className="chip-muted cursor-pointer hover:border-[var(--accent)] transition-all duration-200"
               aria-label={`Show prices in ${showLocal ? "USD" : ctx.country.currencyCode}`}
             >
               {showLocal
@@ -230,7 +224,7 @@ export function TripHero({ plan, multiPlan, heroImage, bookingLinks }: Props) {
 
       {/* Rough-estimate quality indicator for auto-resolved destinations */}
       {isRoughEstimate && (
-        <div className="mt-4 mx-auto max-w-md rounded-xl border border-[var(--gold-200)] dark:border-[var(--gold-400)] bg-[var(--gold-50)] dark:bg-[var(--gold-100)] px-4 py-2.5 text-sm text-[var(--gold-700)] dark:text-[var(--gold-600)] animate-fade-in">
+        <div className="mt-4 mx-auto max-w-md rounded-xl border border-[var(--accent-muted)] bg-[var(--accent-light)] px-4 py-2.5 text-sm text-[var(--accent)] animate-fade-in">
           <span className="inline-flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />

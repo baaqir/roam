@@ -390,7 +390,7 @@ export function EditableItinerary({
   return (
     <div className="space-y-6">
       <div className="flex items-baseline justify-between">
-        <h2 className="text-base font-bold tracking-tight text-[var(--fg)]">
+        <h2 className="text-xl font-bold tracking-tight text-[var(--fg)]">
           Your Itinerary
         </h2>
         {costDelta !== 0 && (
@@ -482,7 +482,7 @@ function CityDivider({
   return (
     <div className="relative my-6 flex items-center gap-4">
       <div className="divider-gradient flex-1" />
-      <div className="card-premium rounded-xl px-4 py-2 text-center">
+      <div className="card-editorial rounded-xl px-4 py-2 text-center">
         <div className="text-xs text-[var(--muted)]">Travel to</div>
         <div className="font-semibold text-[var(--fg)]">{cityName}</div>
         <div className="text-xs text-[var(--muted)]">

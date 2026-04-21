@@ -93,7 +93,7 @@ function ToastItem({
 }) {
   return (
     <div
-      className={`pointer-events-auto card-premium rounded-xl px-4 py-3 flex items-center gap-3 shadow-lg max-w-sm relative ${
+      className={`pointer-events-auto card-editorial rounded-xl px-4 py-3 flex items-center gap-3 shadow-lg max-w-sm relative ${
         toast.exiting ? "animate-slide-out-right" : "animate-slide-in-right"
       }`}
       style={{ boxShadow: "var(--shadow-lg)" }}

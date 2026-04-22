@@ -109,6 +109,10 @@ export default function Home() {
   );
 }
 
+// ─── Hero image cities ─────────────────────────────────────────────
+const HERO_CITIES = ["Barcelona", "Tokyo", "Paris", "Bali", "New York City", "Rome", "Santorini"];
+const TRENDING = ["Barcelona", "Tokyo", "Nashville", "Bali", "Paris", "New Orleans", "Rome", "Lisbon"];
+
 function HomeInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -130,6 +134,10 @@ function HomeInner() {
   const [mounted, setMounted] = useState(false);
   const [todayStr, setTodayStr] = useState("");
 
+  // Hero image state for left panel
+  const [heroImage, setHeroImage] = useState<string | null>(null);
+  const [heroCity, setHeroCity] = useState("");
+
   // Multi-city legs state.
   const [legs, setLegs] = useState<LegInput[]>([]);
   // Profile modal state.
@@ -145,6 +153,18 @@ function HomeInner() {
     setEndDate(addDaysISO(start, 5)); // default 5 nights
     setTodayStr(new Date().toISOString().slice(0, 10));
     setProfileExists(checkHasProfile());
+  }, []);
+
+  // Fetch hero image for the left panel (once on mount)
+  useEffect(() => {
+    const selectedCity = HERO_CITIES[Math.floor(Math.random() * HERO_CITIES.length)];
+    setHeroCity(selectedCity);
+    fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(selectedCity)}`, {
+      headers: { "User-Agent": "Roam/0.1" },
+    })
+      .then((r) => r.json())
+      .then((d) => setHeroImage(d.originalimage?.source ?? d.thumbnail?.source ?? null))
+      .catch(() => null);
   }, []);
 
   // Compute nights from the two dates
@@ -275,198 +295,251 @@ function HomeInner() {
   useKeyboardShortcuts(shortcuts);
 
   return (
-    <main ref={mainRef} className="mx-auto max-w-xl px-6 py-12 pb-16 animate-fade-in-up">
-      <div className="text-center mb-12">
-        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight italic text-[var(--fg)]">
-          Where to next?
-        </h1>
-        <p className="mt-5 text-[var(--muted)] text-base leading-relaxed italic">
-          Type a city, set your style, and get a complete trip plan with
-          budget and day-by-day itinerary.
-        </p>
-      </div>
-
-      <form onSubmit={submit} className="space-y-8">
-        {/* ─── Single-city mode: top-level city + nights ─── */}
-        {!isMultiCity && (
-          <>
-            <div className="card-editorial rounded-2xl p-6">
-              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                Where are you going?
-              </label>
-              <CityInput value={city} onChange={setCity} autoFocus />
+    <main ref={mainRef}>
+      {/* ─── Split-screen hero ─── */}
+      <div className="flex flex-col md:flex-row min-h-[calc(100vh-57px)]">
+        {/* Left: Image + trending destinations */}
+        <div className="relative md:w-[55%] h-56 md:h-auto overflow-hidden bg-[var(--brown-200)]">
+          {heroImage && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={heroImage}
+              alt={heroCity}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          {/* Fallback gradient when no image loaded */}
+          {!heroImage && (
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--terracotta)] via-[var(--brown-600)] to-[var(--brown-800)]" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          {/* Roam wordmark at top-left */}
+          <div className="absolute top-6 left-6 md:top-10 md:left-10">
+            <span
+              className="text-3xl md:text-4xl font-bold italic text-white/90 drop-shadow-lg"
+              style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}
+            >
+              Roam
+            </span>
+          </div>
+          {/* Trending destinations at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+            <p className="text-white/70 text-sm mb-2 italic">Popular destinations</p>
+            <div className="flex flex-wrap gap-2">
+              {TRENDING.map((trendCity) => (
+                <button
+                  key={trendCity}
+                  type="button"
+                  onClick={() => setCity(trendCity)}
+                  className="rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5 text-sm text-white hover:bg-white/30 transition-all duration-200"
+                >
+                  {trendCity}
+                </button>
+              ))}
             </div>
+          </div>
+        </div>
 
-            <div className="card-editorial rounded-2xl p-6">
-              <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
-                When?
-              </label>
-              <div className="flex items-center gap-2">
-                <div className="flex-1">
-                  <label htmlFor="start-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    From
-                  </label>
-                  <input
-                    id="start-date"
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => handleStartDateChange(e.target.value)}
-                    min={todayStr || undefined}
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
-                  />
-                </div>
-                <span className="mt-5 text-[var(--muted)]">→</span>
-                <div className="flex-1">
-                  <label htmlFor="end-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    To
-                  </label>
-                  <input
-                    id="end-date"
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => handleEndDateChange(e.target.value)}
-                    min={startDate || todayStr || undefined}
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
-                  />
-                </div>
-              </div>
-              {startDate && endDate && computedNights > 0 && (
-                <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
-                  {computedNights} night{computedNights !== 1 ? "s" : ""}
-                </p>
-              )}
-            </div>
-
-            <div className="card-editorial rounded-2xl p-6">
-              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                Travelers
-              </label>
-              <TravelersStepper value={travelers} onChange={setTravelers} />
-            </div>
-          </>
-        )}
-
-        {/* ─── Multi-city mode: leg cards ─── */}
-        {isMultiCity && (
-          <>
-            <div className="card-editorial rounded-2xl p-6">
-              <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
-                When does your trip start?
-              </label>
-              <div className="flex items-center gap-2">
-                <div className="flex-1">
-                  <label htmlFor="start-date-mc" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    Depart
-                  </label>
-                  <input
-                    id="start-date-mc"
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => handleStartDateChange(e.target.value)}
-                    min={todayStr || undefined}
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
-                  />
-                </div>
-                <span className="mt-5 text-[var(--muted)]">→</span>
-                <div className="flex-1">
-                  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    Return
-                  </label>
-                  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2.5 text-sm text-[var(--muted)] tabular-nums">
-                    {startDate ? addDaysISO(startDate, legs.reduce((s, l) => s + l.nights, 0)) : "—"}
-                  </div>
-                </div>
-              </div>
-              <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
-                {legs.reduce((s, l) => s + l.nights, 0)} nights total across {legs.length} cities
+        {/* Right: Form */}
+        <div className="md:w-[45%] flex items-center justify-center p-6 md:p-10 lg:p-16 animate-fade-in-up">
+          <div className="w-full max-w-md">
+            <div className="mb-8">
+              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight italic text-[var(--fg)]">
+                Where to next?
+              </h1>
+              <p className="mt-3 text-[var(--muted)] text-sm leading-relaxed italic">
+                Type a city, set your style, and get a complete trip plan with
+                budget and day-by-day itinerary.
               </p>
             </div>
 
-            <div className="card-editorial rounded-2xl p-6">
-              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                Travelers
-              </label>
-              <TravelersStepper value={travelers} onChange={setTravelers} />
-            </div>
+            <form onSubmit={submit} className="space-y-6">
+              {/* ─── Single-city mode: top-level city + nights ─── */}
+              {!isMultiCity && (
+                <>
+                  <div className="card-editorial rounded-2xl p-6">
+                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      Where are you going?
+                    </label>
+                    <CityInput value={city} onChange={setCity} autoFocus />
+                  </div>
 
-            <div className="space-y-4">
-              {legs.map((leg, i) => (
-                <LegCard
-                  key={i}
-                  leg={leg}
-                  index={i}
-                  totalLegs={legs.length}
-                  tripStyle={style}
-                  startDate={startDate}
-                  allLegs={legs}
-                  onUpdate={(patch) => updateLeg(i, patch)}
-                  onRemove={() => handleRemoveLeg(i)}
-                />
-              ))}
-            </div>
-          </>
+                  <div className="card-editorial rounded-2xl p-6">
+                    <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
+                      When?
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1">
+                        <label htmlFor="start-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                          From
+                        </label>
+                        <input
+                          id="start-date"
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => handleStartDateChange(e.target.value)}
+                          min={todayStr || undefined}
+                          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
+                        />
+                      </div>
+                      <span className="mt-5 text-[var(--muted)]">&rarr;</span>
+                      <div className="flex-1">
+                        <label htmlFor="end-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                          To
+                        </label>
+                        <input
+                          id="end-date"
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => handleEndDateChange(e.target.value)}
+                          min={startDate || todayStr || undefined}
+                          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
+                        />
+                      </div>
+                    </div>
+                    {startDate && endDate && computedNights > 0 && (
+                      <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
+                        {computedNights} night{computedNights !== 1 ? "s" : ""}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="card-editorial rounded-2xl p-6">
+                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      Travelers
+                    </label>
+                    <TravelersStepper value={travelers} onChange={setTravelers} />
+                  </div>
+                </>
+              )}
+
+              {/* ─── Multi-city mode: leg cards ─── */}
+              {isMultiCity && (
+                <>
+                  <div className="card-editorial rounded-2xl p-6">
+                    <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
+                      When does your trip start?
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1">
+                        <label htmlFor="start-date-mc" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                          Depart
+                        </label>
+                        <input
+                          id="start-date-mc"
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => handleStartDateChange(e.target.value)}
+                          min={todayStr || undefined}
+                          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
+                        />
+                      </div>
+                      <span className="mt-5 text-[var(--muted)]">&rarr;</span>
+                      <div className="flex-1">
+                        <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                          Return
+                        </label>
+                        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2.5 text-sm text-[var(--muted)] tabular-nums">
+                          {startDate ? addDaysISO(startDate, legs.reduce((s, l) => s + l.nights, 0)) : "\u2014"}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
+                      {legs.reduce((s, l) => s + l.nights, 0)} nights total across {legs.length} cities
+                    </p>
+                  </div>
+
+                  <div className="card-editorial rounded-2xl p-6">
+                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      Travelers
+                    </label>
+                    <TravelersStepper value={travelers} onChange={setTravelers} />
+                  </div>
+
+                  <div className="space-y-4">
+                    {legs.map((leg, i) => (
+                      <LegCard
+                        key={i}
+                        leg={leg}
+                        index={i}
+                        totalLegs={legs.length}
+                        tripStyle={style}
+                        startDate={startDate}
+                        allLegs={legs}
+                        onUpdate={(patch) => updateLeg(i, patch)}
+                        onRemove={() => handleRemoveLeg(i)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {/* ─── Add another city button ─── */}
+              <button
+                type="button"
+                onClick={handleAddCity}
+                className="w-full border border-dashed border-[var(--border)] rounded-2xl p-5 text-center text-sm font-medium text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200"
+              >
+                + Add another city
+              </button>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                  Trip style
+                </label>
+                <StylePicker value={style} onChange={setStyle} />
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={!canSubmit}
+                  className="btn-primary w-full rounded-xl px-6 py-4 text-lg"
+                >
+                  {isMultiCity ? "Plan my multi-city trip" : "Plan my trip"} &rarr;
+                </button>
+
+                <p className="mt-4 text-center text-xs text-[var(--muted)]">
+                  <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1.5 py-0.5 text-[10px] font-mono">
+                    {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "\u2318" : "Ctrl"}+Enter
+                  </kbd>{" "}
+                  to submit
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Below the fold ─── */}
+      <div className="mx-auto max-w-5xl px-6 py-12">
+        {/* Profile banner: shown when no profile exists yet */}
+        {mounted && !profileExists && (
+          <div className="mb-8 animate-fade-in">
+            <button
+              type="button"
+              onClick={() => setShowProfile(true)}
+              className="w-full rounded-2xl border-l-[3px] border-l-[var(--accent)] bg-[var(--surface)] p-6 text-left shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)] text-lg text-white">
+                  &#10024;
+                </div>
+                <div>
+                  <div className="font-semibold text-[var(--fg)]">
+                    Personalize your trips
+                  </div>
+                  <div className="text-sm text-[var(--muted)]">
+                    Tell Roam your travel style and every itinerary will be tailored to you.
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
         )}
 
-        {/* ─── Add another city button ─── */}
-        <button
-          type="button"
-          onClick={handleAddCity}
-          className="w-full border border-dashed border-[var(--border)] rounded-2xl p-5 text-center text-sm font-medium text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200"
-        >
-          + Add another city
-        </button>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-            Trip style
-          </label>
-          <StylePicker value={style} onChange={setStyle} />
-        </div>
-
-        <div>
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className="btn-primary w-full rounded-xl px-6 py-4 text-lg"
-          >
-            {isMultiCity ? "Plan my multi-city trip" : "Plan my trip"} &rarr;
-          </button>
-
-          <p className="mt-4 text-center text-xs text-[var(--muted)]">
-            <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1.5 py-0.5 text-[10px] font-mono">
-              {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "\u2318" : "Ctrl"}+Enter
-            </kbd>{" "}
-            to submit
-          </p>
-        </div>
-      </form>
-
-      {/* Profile banner: shown when no profile exists yet */}
-      {mounted && !profileExists && (
-        <div className="mt-8 animate-fade-in">
-          <button
-            type="button"
-            onClick={() => setShowProfile(true)}
-            className="w-full rounded-2xl border-l-[3px] border-l-[var(--accent)] bg-[var(--surface)] p-6 text-left shadow-sm transition-all duration-200 hover:shadow-md"
-          >
-            <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)] text-lg text-white">
-                ✨
-              </div>
-              <div>
-                <div className="font-semibold text-[var(--fg)]">
-                  Personalize your trips
-                </div>
-                <div className="text-sm text-[var(--muted)]">
-                  Tell Roam your travel style and every itinerary will be tailored to you.
-                </div>
-              </div>
-            </div>
-          </button>
-        </div>
-      )}
-
-      <RecentTrips />
+        <RecentTrips />
+      </div>
 
       {/* Profile modal — only shows when explicitly opened */}
       {showProfile && (

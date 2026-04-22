@@ -5,11 +5,7 @@ import { decodeTripInput, defaultStartDate } from "@/lib/url";
 import { isMultiCity } from "@/lib/types";
 import type { TripPlan, MultiCityTripPlan } from "@/lib/types";
 import { TripPageClient } from "@/components/TripPageClient";
-import { PreDepartureChecklist } from "@/components/PreDepartureChecklist";
-import { PackingSuggestions } from "@/components/PackingSuggestions";
-import { LocalTips } from "@/components/LocalTips";
 import { TripPageShortcuts } from "@/components/TripPageShortcuts";
-import { TripNotes } from "@/components/TripNotes";
 import { CurrencyProvider } from "@/components/CurrencyContext";
 import { fetchCityImage } from "@/lib/wikipedia-image";
 import { fetchWeather, type DayWeather } from "@/lib/weather";
@@ -209,17 +205,19 @@ export default async function TripPage({
       localSymbol={ctx.country?.currencySymbol}
       localCode={ctx.country?.currencyCode}
     >
-      <main className="mx-auto max-w-2xl px-6 py-12">
+      <main>
         {/* Invisible client component for keyboard shortcuts */}
         <TripPageShortcuts plan={singlePlanCompat} />
 
-        <div className="mb-8 animate-fade-in">
-          <Link
-            href="/"
-            className="text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200"
-          >
-            &larr; Plan another trip
-          </Link>
+        <div className="mx-auto max-w-6xl px-6 pt-12">
+          <div className="mb-8 animate-fade-in">
+            <Link
+              href="/"
+              className="text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200"
+            >
+              &larr; Plan another trip
+            </Link>
+          </div>
         </div>
 
         {/* Client wrapper manages customized days state for save/share (Bug 2 + 5) */}
@@ -229,74 +227,11 @@ export default async function TripPage({
           heroImage={heroImage}
           weatherByDate={weatherByDate}
           useFahrenheit={isUS}
+          tips={tips}
+          checklist={checklist}
+          assumptions={plan.assumptions}
+          tripInput={plan.input}
         />
-
-        {/* Local tips (for curated destinations with tips) */}
-        {tips.length > 0 && (
-          <div className="mt-12" style={{ animationDelay: "250ms" }}>
-            <hr className="divider-gradient mb-12" />
-            <div className="animate-fade-in-up" style={{ animationDelay: "250ms" }}>
-              <LocalTips plan={singlePlanCompat} />
-            </div>
-          </div>
-        )}
-
-        {checklist.length > 0 && (
-          <div className="mt-12" style={{ animationDelay: "400ms" }}>
-            <div className="animate-fade-in-up" style={{ animationDelay: "400ms" }}>
-              <PreDepartureChecklist plan={singlePlanCompat} />
-            </div>
-          </div>
-        )}
-
-        {/* Packing suggestions */}
-        <div className="mt-12" style={{ animationDelay: "450ms" }}>
-          <div className="animate-fade-in-up" style={{ animationDelay: "450ms" }}>
-            <PackingSuggestions plan={singlePlanCompat} />
-          </div>
-        </div>
-
-        {/* Trip Notes (Feature 8) */}
-        <div className="mt-12" style={{ animationDelay: "500ms" }}>
-          <div className="animate-fade-in-up" style={{ animationDelay: "500ms" }}>
-            <TripNotes input={plan.input} />
-          </div>
-        </div>
-
-        {plan.assumptions.length > 0 && (
-          <details className="mt-12 card-editorial rounded-2xl p-6 print-assumptions">
-            <summary className="cursor-pointer text-sm font-semibold text-[var(--muted)] hover:text-[var(--fg)] transition-colors duration-200">
-              Assumptions & notes
-            </summary>
-            <div className="mt-3 animate-fade-in space-y-4">
-              {/* Data sources section */}
-              <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-secondary)] mb-2">
-                  Data Sources
-                </h3>
-                <ul className="list-inside list-disc space-y-1 text-sm text-[var(--muted)]">
-                  <li>Flight prices: Regional averages (Kayak/Google Flights baseline)</li>
-                  <li>Lodging: Global tier averages adjusted for destination cost of living</li>
-                  <li>Activities: Wikipedia tourist attractions catalog</li>
-                  <li>Weather: Open-Meteo forecast</li>
-                  <li>Currency: Frankfurter ECB rates</li>
-                  <li>Country info: REST Countries API</li>
-                </ul>
-              </div>
-              {/* Assumptions */}
-              <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-secondary)] mb-2">
-                  Assumptions
-                </h3>
-                <ul className="list-inside list-disc space-y-1 text-sm text-[var(--muted)]">
-                  {plan.assumptions.map((a, i) => (
-                    <li key={i}>{a}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </details>
-        )}
       </main>
     </CurrencyProvider>
   );

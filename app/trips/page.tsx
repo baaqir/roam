@@ -51,7 +51,7 @@ export default function TripsPage() {
   const count = tripCountForYear(year);
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-12 animate-fade-in-up">
+    <main className="mx-auto max-w-4xl px-6 py-12 animate-fade-in-up">
       <div className="mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--fg)]">
           My Trips

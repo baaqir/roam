@@ -297,7 +297,7 @@ function HomeInner() {
   return (
     <main ref={mainRef}>
       {/* ─── Split-screen hero ─── */}
-      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-49px)]">
+      <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Left: Image + trending destinations */}
         <div className="relative lg:w-1/2 h-64 lg:h-auto overflow-hidden bg-[var(--brown-200)]">
           {heroImage && (
@@ -305,23 +305,34 @@ function HomeInner() {
             <img
               src={heroImage}
               alt={heroCity}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover animate-slow-zoom"
             />
           )}
           {!heroImage && (
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--terracotta)] via-[var(--brown-600)] to-[var(--brown-800)]" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
-          {/* Trending destinations at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          {/* Current hero city label */}
+          {heroCity && (
+            <div className="absolute top-6 left-6 lg:top-8 lg:left-8">
+              <p className="text-white/50 text-[10px] uppercase tracking-widest">Featured</p>
+              <p
+                className="text-white text-2xl lg:text-3xl font-bold italic mt-0.5"
+                style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}
+              >
+                {heroCity}
+              </p>
+            </div>
+          )}
+          {/* Trending destinations */}
           <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
-            <p className="text-white/60 text-xs uppercase tracking-wider mb-3">Popular destinations</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {TRENDING.map((trendCity) => (
                 <button
                   key={trendCity}
                   type="button"
                   onClick={() => setCity(trendCity)}
-                  className="rounded-full bg-white/15 backdrop-blur-sm border border-white/20 px-3 py-1.5 text-sm text-white/90 hover:bg-white/25 transition-all duration-200"
+                  className="rounded-full bg-white/10 backdrop-blur-sm border border-white/15 px-3 py-1 text-xs text-white/80 hover:bg-white/20 hover:text-white transition-all duration-200"
                 >
                   {trendCity}
                 </button>
@@ -488,53 +499,30 @@ function HomeInner() {
                 {isMultiCity ? "Plan multi-city trip" : "Plan my trip"} →
               </button>
 
-              <div className="flex items-center justify-between mt-2">
+              <div className="flex items-center justify-between mt-3 text-[10px] text-[var(--muted)]">
                 <button
                   type="button"
                   onClick={handleAddCity}
-                  className="text-xs text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200"
+                  className="hover:text-[var(--accent)] transition-colors duration-200"
                 >
-                  + Multi-city trip
+                  + Multi-city
                 </button>
-                <span className="text-[10px] text-[var(--muted)]">
-                  <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1 py-0.5 text-[9px] font-mono">
-                    {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "⌘" : "Ctrl"}↵
-                  </kbd>
-                </span>
+                {mounted && !profileExists && (
+                  <button
+                    type="button"
+                    onClick={() => setShowProfile(true)}
+                    className="hover:text-[var(--accent)] transition-colors duration-200"
+                  >
+                    ✦ Personalize
+                  </button>
+                )}
+                <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1 py-0.5 text-[9px] font-mono">
+                  {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "⌘" : "Ctrl"}↵
+                </kbd>
               </div>
             </form>
           </div>
         </div>
-      </div>
-
-      {/* ─── Below the fold ─── */}
-      <div className="mx-auto max-w-5xl px-6 py-12">
-        {/* Profile banner: shown when no profile exists yet */}
-        {mounted && !profileExists && (
-          <div className="mb-8 animate-fade-in">
-            <button
-              type="button"
-              onClick={() => setShowProfile(true)}
-              className="w-full rounded-2xl border-l-[3px] border-l-[var(--accent)] bg-[var(--surface)] p-6 text-left shadow-sm transition-all duration-200 hover:shadow-md"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)] text-lg text-white">
-                  &#10024;
-                </div>
-                <div>
-                  <div className="font-semibold text-[var(--fg)]">
-                    Personalize your trips
-                  </div>
-                  <div className="text-sm text-[var(--muted)]">
-                    Tell Roam your travel style and every itinerary will be tailored to you.
-                  </div>
-                </div>
-              </div>
-            </button>
-          </div>
-        )}
-
-        <RecentTrips />
       </div>
 
       {/* Profile modal — only shows when explicitly opened */}

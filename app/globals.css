@@ -304,6 +304,16 @@ html.dark ::-webkit-scrollbar-thumb {
 }
 
 /* ─── Animations ────────────────────────────────────────────────────── */
+
+/* Slow Ken Burns zoom for hero images */
+@keyframes slow-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.animate-slow-zoom {
+  animation: slow-zoom 20s ease-out forwards;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;

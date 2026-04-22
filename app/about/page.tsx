@@ -32,7 +32,7 @@ function Kbd({ children }: { children: React.ReactNode }) {
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16 space-y-16">
+    <main className="mx-auto max-w-3xl px-6 pt-20 pb-16 space-y-16">
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="animate-fade-in-up text-center">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--fg)]">

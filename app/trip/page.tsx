@@ -92,7 +92,7 @@ export default async function TripPage({
     const retryUrl = `/?${retryParams.toString()}`;
 
     return (
-      <main className="mx-auto max-w-2xl px-6 py-16 text-center animate-fade-in-up">
+      <main className="mx-auto max-w-2xl px-6 pt-20 pb-16 text-center animate-fade-in-up">
         <div className="card-editorial rounded-2xl p-8">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/40">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-600 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -205,7 +205,7 @@ export default async function TripPage({
       localSymbol={ctx.country?.currencySymbol}
       localCode={ctx.country?.currencyCode}
     >
-      <main>
+      <main className="pt-14">
         {/* Invisible client component for keyboard shortcuts */}
         <TripPageShortcuts plan={singlePlanCompat} />
 

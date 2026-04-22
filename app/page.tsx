@@ -499,26 +499,25 @@ function HomeInner() {
                 {isMultiCity ? "Plan multi-city trip" : "Plan my trip"} →
               </button>
 
-              <div className="flex items-center justify-between mt-3 text-[10px] text-[var(--muted)]">
+              <div className="flex items-center gap-3 mt-4">
                 <button
                   type="button"
                   onClick={handleAddCity}
-                  className="hover:text-[var(--accent)] transition-colors duration-200"
+                  className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-[var(--border)] py-2 text-xs font-medium text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200"
                 >
-                  + Multi-city
+                  <span>🌍</span>
+                  <span>Add more cities</span>
                 </button>
                 {mounted && !profileExists && (
                   <button
                     type="button"
                     onClick={() => setShowProfile(true)}
-                    className="hover:text-[var(--accent)] transition-colors duration-200"
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-[var(--border)] py-2 text-xs font-medium text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200"
                   >
-                    ✦ Personalize
+                    <span>✦</span>
+                    <span>Set travel style</span>
                   </button>
                 )}
-                <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1 py-0.5 text-[9px] font-mono">
-                  {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "⌘" : "Ctrl"}↵
-                </kbd>
               </div>
             </form>
           </div>

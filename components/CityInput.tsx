@@ -111,6 +111,13 @@ export function CityInput({ value, onChange, autoFocus }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Sync internal text when parent value changes (e.g., trending pill click)
+  useEffect(() => {
+    if (value !== text && value !== "") {
+      setText(value);
+    }
+  }, [value]);
+
   useEffect(() => {
     if (autoFocus) {
       const t = setTimeout(() => inputRef.current?.focus(), 100);

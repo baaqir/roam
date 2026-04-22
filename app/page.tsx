@@ -428,63 +428,63 @@ function HomeInner() {
                 </>
               )}
 
-              {/* ─── Multi-city mode: leg cards ─── */}
+              {/* ─── Multi-city mode: compact rows ─── */}
               {isMultiCity && (
                 <>
-                  <div className="card-editorial rounded-2xl p-6">
-                    <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
-                      When does your trip start?
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1">
-                        <label htmlFor="start-date-mc" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                          Depart
-                        </label>
-                        <input
-                          id="start-date-mc"
-                          type="date"
-                          value={startDate}
-                          onChange={(e) => handleStartDateChange(e.target.value)}
-                          min={todayStr || undefined}
-                          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
-                        />
-                      </div>
-                      <span className="mt-5 text-[var(--muted)]">&rarr;</span>
-                      <div className="flex-1">
-                        <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                          Return
-                        </label>
-                        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2.5 text-sm text-[var(--muted)] tabular-nums">
-                          {startDate ? addDaysISO(startDate, legs.reduce((s, l) => s + l.nights, 0)) : "\u2014"}
+                  <div className="space-y-2">
+                    {legs.map((leg, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <span className="text-[10px] font-semibold text-[var(--accent)] w-4 flex-shrink-0">{i + 1}</span>
+                        <div className="flex-1 min-w-0">
+                          <CityInput value={leg.city} onChange={(v) => updateLeg(i, { city: v })} />
                         </div>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button type="button" onClick={() => updateLeg(i, { nights: Math.max(1, leg.nights - 1) })} className="h-7 w-7 rounded border border-[var(--border)] bg-[var(--surface)] text-xs font-bold text-[var(--fg)] hover:border-[var(--accent)] transition-all">−</button>
+                          <span className="w-5 text-center text-sm font-bold tabular-nums text-[var(--fg)]">{leg.nights}</span>
+                          <button type="button" onClick={() => updateLeg(i, { nights: Math.min(30, leg.nights + 1) })} className="h-7 w-7 rounded border border-[var(--border)] bg-[var(--surface)] text-xs font-bold text-[var(--fg)] hover:border-[var(--accent)] transition-all">+</button>
+                          <span className="text-[10px] text-[var(--muted)]">n</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveLeg(i)}
+                          className="flex-shrink-0 text-[var(--muted)] hover:text-red-500 transition-colors text-xs"
+                          aria-label={`Remove stop ${i + 1}`}
+                        >×</button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setLegs((prev) => [...prev, { city: "", nights: 3 }])}
+                      className="w-full text-center text-xs text-[var(--muted)] hover:text-[var(--accent)] py-1 transition-colors"
+                    >
+                      + Add another stop
+                    </button>
+                  </div>
+
+                  <div className="flex items-end gap-3">
+                    <div className="flex-1">
+                      <label htmlFor="start-date-mc" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">From</label>
+                      <input id="start-date-mc" type="date" value={startDate} onChange={(e) => handleStartDateChange(e.target.value)} min={todayStr || undefined} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--fg)] focus-ring transition-all duration-200" />
+                    </div>
+                    <span className="pb-2 text-[var(--muted)] text-xs">→</span>
+                    <div className="flex-1">
+                      <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">Return</label>
+                      <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2 text-sm text-[var(--muted)] tabular-nums">
+                        {startDate ? addDaysISO(startDate, legs.reduce((s, l) => s + l.nights, 0)) : "—"}
                       </div>
                     </div>
-                    <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
-                      {legs.reduce((s, l) => s + l.nights, 0)} nights total across {legs.length} cities
-                    </p>
+                    <div className="pb-2 text-sm font-medium text-[var(--accent)] whitespace-nowrap tabular-nums">
+                      {legs.reduce((s, l) => s + l.nights, 0)}n
+                    </div>
                   </div>
 
-                  <div className="card-editorial rounded-2xl p-6">
-                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                      Travelers
-                    </label>
-                    <TravelersStepper value={travelers} onChange={setTravelers} />
-                  </div>
-
-                  <div className="space-y-4">
-                    {legs.map((leg, i) => (
-                      <LegCard
-                        key={i}
-                        leg={leg}
-                        index={i}
-                        totalLegs={legs.length}
-                        tripStyle={style}
-                        startDate={startDate}
-                        allLegs={legs}
-                        onUpdate={(patch) => updateLeg(i, patch)}
-                        onRemove={() => handleRemoveLeg(i)}
-                      />
-                    ))}
+                  <div className="flex items-center gap-3">
+                    <label className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">Travelers</label>
+                    <div className="flex items-center gap-2">
+                      <button type="button" onClick={() => setTravelers((n: number) => Math.max(1, n - 1))} className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-sm font-bold text-[var(--fg)] hover:border-[var(--accent)] transition-all duration-200">−</button>
+                      <span className="w-6 text-center text-lg font-bold tabular-nums text-[var(--fg)]">{travelers}</span>
+                      <button type="button" onClick={() => setTravelers((n: number) => Math.min(8, n + 1))} className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-sm font-bold text-[var(--fg)] hover:border-[var(--accent)] transition-all duration-200">+</button>
+                    </div>
                   </div>
                 </>
               )}

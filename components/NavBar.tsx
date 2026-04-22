@@ -49,7 +49,7 @@ export function NavBar() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           solid
             ? "bg-[var(--surface)]/95 backdrop-blur-lg border-b border-[var(--border-subtle)] shadow-sm"
-            : ""
+            : "bg-gradient-to-b from-black/40 to-transparent"
         }`}
         aria-label="Main navigation"
       >
@@ -82,7 +82,7 @@ export function NavBar() {
                         : "bg-white/15 text-white"
                       : solid
                         ? "text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)]"
-                        : "text-white/60 hover:text-white hover:bg-white/10"
+                        : "text-white/80 hover:text-white hover:bg-white/10"
                   }`}
                 >
                   {link.label}
@@ -96,7 +96,7 @@ export function NavBar() {
               className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm transition-all duration-300 ${
                 solid
                   ? "text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)]"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
+                  : "text-white/80 hover:text-white hover:bg-white/10"
               }`}
               aria-label="Travel preferences"
             >

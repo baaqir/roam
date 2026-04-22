@@ -5,7 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { ProfileSetup } from "./ProfileSetup";
-import { getProfile, topInterestEmoji, hasProfile as checkHasProfile } from "@/lib/profile";
+import {
+  getProfile,
+  topInterestEmoji,
+  hasProfile as checkHasProfile,
+} from "@/lib/profile";
 
 export function NavBar() {
   const path = usePathname();
@@ -16,54 +20,62 @@ export function NavBar() {
   useEffect(() => {
     const profile = getProfile();
     setProfileExists(checkHasProfile());
-    if (profile) {
-      setProfileEmoji(topInterestEmoji(profile));
-    }
-  }, [showProfileSetup]); // re-check when modal closes
-
-  const handleOpenProfile = useCallback(() => {
-    setShowProfileSetup(true);
-  }, []);
+    if (profile) setProfileEmoji(topInterestEmoji(profile));
+  }, [showProfileSetup]);
 
   const handleCloseProfile = useCallback(() => {
     setShowProfileSetup(false);
-    // Refresh profile state after close
     const profile = getProfile();
     setProfileExists(checkHasProfile());
-    if (profile) {
-      setProfileEmoji(topInterestEmoji(profile));
-    }
+    if (profile) setProfileEmoji(topInterestEmoji(profile));
   }, []);
 
   return (
     <>
-      <nav className="sticky top-0 z-50 border-b border-[var(--border-subtle)] glass" aria-label="Main navigation">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <span className="font-[var(--font-playfair)] text-xl italic font-bold tracking-tight text-[var(--fg)] transition-colors duration-200 group-hover:text-[var(--accent)]" style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}>
+      <nav
+        className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--surface)]/90 backdrop-blur-lg"
+        aria-label="Main navigation"
+      >
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+          <div className="flex items-center gap-8">
+            <Link href="/" className="group">
+              <span
+                className="text-xl font-bold italic tracking-tight text-[var(--fg)] transition-colors duration-200 group-hover:text-[var(--accent)]"
+                style={{
+                  fontFamily:
+                    "var(--font-playfair, 'Playfair Display', Georgia, serif)",
+                }}
+              >
                 Roam
               </span>
             </Link>
-            <div className="flex gap-4 text-sm">
+            <div className="hidden sm:flex gap-1">
               <NavLink href="/" label="Plan" active={path === "/"} />
-              <NavLink href="/trips" label="My Trips" active={path === "/trips"} />
-              <NavLink href="/about" label="About" active={path === "/about"} />
+              <NavLink
+                href="/trips"
+                label="My Trips"
+                active={path === "/trips"}
+              />
+              <NavLink
+                href="/about"
+                label="About"
+                active={path === "/about"}
+              />
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
-              onClick={handleOpenProfile}
-              className="relative flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-all duration-200"
+              onClick={() => setShowProfileSetup(true)}
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-all duration-200"
               aria-label="Travel preferences"
             >
               {profileExists ? (
                 <span className="text-base">{profileEmoji}</span>
               ) : (
-                <>
-                  <span className="text-xs italic">Preferences</span>
-                  <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--accent)]" />
-                </>
+                <span className="relative text-xs italic">
+                  Preferences
+                  <span className="absolute -top-0.5 -right-2 h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+                </span>
               )}
             </button>
             <ThemeToggle />
@@ -91,16 +103,13 @@ function NavLink({
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`relative font-medium transition-colors duration-200 rounded-md px-1 focus-ring ${
+      className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 ${
         active
-          ? "text-[var(--accent)]"
-          : "text-[var(--muted)] hover:text-[var(--fg)]"
+          ? "bg-[var(--accent-light)] text-[var(--accent)]"
+          : "text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)]"
       }`}
     >
       {label}
-      {active && (
-        <span className="absolute -bottom-3.5 left-0 right-0 h-0.5 rounded-full bg-[var(--accent)]" />
-      )}
     </Link>
   );
 }

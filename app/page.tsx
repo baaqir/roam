@@ -297,9 +297,9 @@ function HomeInner() {
   return (
     <main ref={mainRef}>
       {/* ─── Split-screen hero ─── */}
-      <div className="flex flex-col md:flex-row min-h-[calc(100vh-57px)]">
+      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-49px)]">
         {/* Left: Image + trending destinations */}
-        <div className="relative md:w-[55%] h-56 md:h-auto overflow-hidden bg-[var(--brown-200)]">
+        <div className="relative lg:w-1/2 h-64 lg:h-auto overflow-hidden bg-[var(--brown-200)]">
           {heroImage && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -308,30 +308,20 @@ function HomeInner() {
               className="absolute inset-0 w-full h-full object-cover"
             />
           )}
-          {/* Fallback gradient when no image loaded */}
           {!heroImage && (
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--terracotta)] via-[var(--brown-600)] to-[var(--brown-800)]" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          {/* Roam wordmark at top-left */}
-          <div className="absolute top-6 left-6 md:top-10 md:left-10">
-            <span
-              className="text-3xl md:text-4xl font-bold italic text-white/90 drop-shadow-lg"
-              style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}
-            >
-              Roam
-            </span>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
           {/* Trending destinations at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-            <p className="text-white/70 text-sm mb-2 italic">Popular destinations</p>
+          <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
+            <p className="text-white/60 text-xs uppercase tracking-wider mb-3">Popular destinations</p>
             <div className="flex flex-wrap gap-2">
               {TRENDING.map((trendCity) => (
                 <button
                   key={trendCity}
                   type="button"
                   onClick={() => setCity(trendCity)}
-                  className="rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5 text-sm text-white hover:bg-white/30 transition-all duration-200"
+                  className="rounded-full bg-white/15 backdrop-blur-sm border border-white/20 px-3 py-1.5 text-sm text-white/90 hover:bg-white/25 transition-all duration-200"
                 >
                   {trendCity}
                 </button>
@@ -341,19 +331,21 @@ function HomeInner() {
         </div>
 
         {/* Right: Form */}
-        <div className="md:w-[45%] flex items-center justify-center p-6 md:p-10 lg:p-16 animate-fade-in-up">
+        <div className="lg:w-1/2 flex items-center justify-center px-6 py-10 lg:px-12 lg:py-0">
           <div className="w-full max-w-md">
-            <div className="mb-8">
-              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight italic text-[var(--fg)]">
+            <div className="mb-6">
+              <h1
+                className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight italic text-[var(--fg)]"
+                style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}
+              >
                 Where to next?
               </h1>
-              <p className="mt-3 text-[var(--muted)] text-sm leading-relaxed italic">
-                Type a city, set your style, and get a complete trip plan with
-                budget and day-by-day itinerary.
+              <p className="mt-3 text-[var(--muted)] text-sm leading-relaxed">
+                Plan a trip to any city with a personalized itinerary and cost estimate.
               </p>
             </div>
 
-            <form onSubmit={submit} className="space-y-6">
+            <form onSubmit={submit} className="space-y-4">
               {/* ─── Single-city mode: top-level city + nights ─── */}
               {!isMultiCity && (
                 <>

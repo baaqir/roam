@@ -407,7 +407,7 @@ export function EditableItinerary({
       </div>
 
       {/* Sticky day navigation for 5+ day trips */}
-      {days.length >= 5 && <DayNav days={days} />}
+      {days.length >= 3 && <DayNav days={days} />}
 
       <div className="stagger-children space-y-6">
         {dayElements}

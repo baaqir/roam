@@ -331,76 +331,88 @@ function HomeInner() {
         </div>
 
         {/* Right: Form */}
-        <div className="lg:w-1/2 flex items-center justify-center px-6 py-10 lg:px-12 lg:py-0">
+        <div className="lg:w-1/2 flex items-center justify-center px-6 py-8 lg:px-12 lg:py-0">
           <div className="w-full max-w-md">
-            <div className="mb-6">
+            <div className="mb-5">
               <h1
-                className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight italic text-[var(--fg)]"
+                className="text-3xl lg:text-4xl font-bold tracking-tight italic text-[var(--fg)]"
                 style={{ fontFamily: "var(--font-playfair, 'Playfair Display', Georgia, serif)" }}
               >
                 Where to next?
               </h1>
-              <p className="mt-3 text-[var(--muted)] text-sm leading-relaxed">
-                Plan a trip to any city with a personalized itinerary and cost estimate.
+              <p className="mt-2 text-[var(--muted)] text-sm">
+                Any city. Personalized itinerary. Cost estimate.
               </p>
             </div>
 
             <form onSubmit={submit} className="space-y-4">
-              {/* ─── Single-city mode: top-level city + nights ─── */}
+              {/* ─── Single-city mode ─── */}
               {!isMultiCity && (
                 <>
-                  <div className="card-editorial rounded-2xl p-6">
-                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                      Where are you going?
-                    </label>
+                  <div>
                     <CityInput value={city} onChange={setCity} autoFocus />
                   </div>
 
-                  <div className="card-editorial rounded-2xl p-6">
-                    <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
-                      When?
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1">
-                        <label htmlFor="start-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                          From
-                        </label>
-                        <input
-                          id="start-date"
-                          type="date"
-                          value={startDate}
-                          onChange={(e) => handleStartDateChange(e.target.value)}
-                          min={todayStr || undefined}
-                          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
-                        />
-                      </div>
-                      <span className="mt-5 text-[var(--muted)]">&rarr;</span>
-                      <div className="flex-1">
-                        <label htmlFor="end-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                          To
-                        </label>
-                        <input
-                          id="end-date"
-                          type="date"
-                          value={endDate}
-                          onChange={(e) => handleEndDateChange(e.target.value)}
-                          min={startDate || todayStr || undefined}
-                          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--fg)] focus-ring transition-all duration-200 hover:border-[var(--accent)]"
-                        />
-                      </div>
+                  <div className="flex items-end gap-3">
+                    <div className="flex-1">
+                      <label htmlFor="start-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                        From
+                      </label>
+                      <input
+                        id="start-date"
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => handleStartDateChange(e.target.value)}
+                        min={todayStr || undefined}
+                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--fg)] focus-ring transition-all duration-200"
+                      />
+                    </div>
+                    <span className="pb-2 text-[var(--muted)] text-xs">→</span>
+                    <div className="flex-1">
+                      <label htmlFor="end-date" className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                        To
+                      </label>
+                      <input
+                        id="end-date"
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => handleEndDateChange(e.target.value)}
+                        min={startDate || todayStr || undefined}
+                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--fg)] focus-ring transition-all duration-200"
+                      />
                     </div>
                     {startDate && endDate && computedNights > 0 && (
-                      <p className="mt-2 text-center text-sm font-medium text-[var(--accent)]">
-                        {computedNights} night{computedNights !== 1 ? "s" : ""}
-                      </p>
+                      <div className="pb-2 text-sm font-medium text-[var(--accent)] whitespace-nowrap tabular-nums">
+                        {computedNights}n
+                      </div>
                     )}
                   </div>
 
-                  <div className="card-editorial rounded-2xl p-6">
-                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                  <div className="flex items-center gap-3">
+                    <label className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
                       Travelers
                     </label>
-                    <TravelersStepper value={travelers} onChange={setTravelers} />
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setTravelers((n: number) => Math.max(1, n - 1))}
+                        aria-label="Decrease travelers"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-sm font-bold text-[var(--fg)] hover:border-[var(--accent)] transition-all duration-200"
+                      >
+                        −
+                      </button>
+                      <span className="w-6 text-center text-lg font-bold tabular-nums text-[var(--fg)]">
+                        {travelers}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setTravelers((n: number) => Math.min(8, n + 1))}
+                        aria-label="Increase travelers"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-sm font-bold text-[var(--fg)] hover:border-[var(--accent)] transition-all duration-200"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </>
               )}
@@ -466,37 +478,29 @@ function HomeInner() {
                 </>
               )}
 
-              {/* ─── Add another city button ─── */}
+              <StylePicker value={style} onChange={setStyle} />
+
               <button
-                type="button"
-                onClick={handleAddCity}
-                className="w-full border border-dashed border-[var(--border)] rounded-2xl p-5 text-center text-sm font-medium text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200"
+                type="submit"
+                disabled={!canSubmit}
+                className="btn-primary w-full rounded-xl px-6 py-3 text-base"
               >
-                + Add another city
+                {isMultiCity ? "Plan multi-city trip" : "Plan my trip"} →
               </button>
 
-              <div>
-                <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
-                  Trip style
-                </label>
-                <StylePicker value={style} onChange={setStyle} />
-              </div>
-
-              <div>
+              <div className="flex items-center justify-between mt-2">
                 <button
-                  type="submit"
-                  disabled={!canSubmit}
-                  className="btn-primary w-full rounded-xl px-6 py-4 text-lg"
+                  type="button"
+                  onClick={handleAddCity}
+                  className="text-xs text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200"
                 >
-                  {isMultiCity ? "Plan my multi-city trip" : "Plan my trip"} &rarr;
+                  + Multi-city trip
                 </button>
-
-                <p className="mt-4 text-center text-xs text-[var(--muted)]">
-                  <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1.5 py-0.5 text-[10px] font-mono">
-                    {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "\u2318" : "Ctrl"}+Enter
-                  </kbd>{" "}
-                  to submit
-                </p>
+                <span className="text-[10px] text-[var(--muted)]">
+                  <kbd className="rounded border border-[var(--border)] bg-[var(--surface)] px-1 py-0.5 text-[9px] font-mono">
+                    {mounted && typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent) ? "⌘" : "Ctrl"}↵
+                  </kbd>
+                </span>
               </div>
             </form>
           </div>
